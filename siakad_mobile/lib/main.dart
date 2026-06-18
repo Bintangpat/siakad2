@@ -58,7 +58,7 @@ class SiakadApp extends StatelessWidget {
         '/shell': (_) => const MainShellScreen(),
         '/detail-krs': (_) => const DetailKrsScreen(),
         '/news': (_) => const NewsDetailScreen(),
-        '/presensi': (_) => const PresensiScreen(),
+        '/presensi': (_) => const SiakadPresensiPage(),
         '/payment-method': (_) => const SiakadPaymentMethodPage(),
         '/payment-detail': (_) => const SiakadPaymentDetailPage(),
         '/payment-success': (_) => const SiakadPaymentSuccessPage(),

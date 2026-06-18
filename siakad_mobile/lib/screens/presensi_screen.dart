@@ -114,7 +114,7 @@ class _ScannerViewPlaceholder extends StatelessWidget {
             // Simulasi Latar Belakang Kamera Feed (Grid Pattern)
             Positioned.fill(
               child: Container(
-                color: colorScheme.surfaceContainerHigh.withOpacity(0.3),
+                color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.3),
                 child: Opacity(
                   opacity: 0.4,
                   child: GridPaper(
@@ -133,8 +133,8 @@ class _ScannerViewPlaceholder extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      colorScheme.primary.withOpacity(0.0),
-                      colorScheme.primary.withOpacity(0.05),
+                      colorScheme.primary.withValues(alpha: 0.0),
+                      colorScheme.primary.withValues(alpha: 0.05),
                     ],
                   ),
                 ),
@@ -148,7 +148,7 @@ class _ScannerViewPlaceholder extends StatelessWidget {
                   width: 192, // Setara w-48
                   height: 192, // Setara h-48
                   decoration: BoxDecoration(
-                    border: Border.all(color: colorScheme.primary.withOpacity(0.2), width: 2),
+                    border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2), width: 2),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Stack(
@@ -171,7 +171,7 @@ class _ScannerViewPlaceholder extends StatelessWidget {
                         child: Container(width: 32, height: 32, decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colorScheme.primary, width: 4), right: BorderSide(color: colorScheme.primary, width: 4)), borderRadius: const BorderRadius.only(bottomRight: Radius.circular(12))))),
                       // Ikon QR Pemindai Tengah
                       Center(
-                        child: Icon(Icons.qr_code_scanner, size: 48, color: colorScheme.primary.withOpacity(0.4)),
+                        child: Icon(Icons.qr_code_scanner, size: 48, color: colorScheme.primary.withValues(alpha: 0.4)),
                       ),
                       // Garis Simulasi Efek Laser Scan (.animate-scan)
                       Center(
@@ -181,7 +181,7 @@ class _ScannerViewPlaceholder extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: colorScheme.primary,
                             boxShadow: [
-                              BoxShadow(color: colorScheme.primary.withOpacity(0.8), blurRadius: 8, spreadRadius: 1),
+                              BoxShadow(color: colorScheme.primary.withValues(alpha: 0.8), blurRadius: 8, spreadRadius: 1),
                             ],
                           ),
                         ),
@@ -235,7 +235,7 @@ class _ActiveClassCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Column(
-                  cross CrossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -284,7 +284,7 @@ class _ActiveClassCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(12.0), // Setara rounded-xl
-                  border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.5)),
+                  border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
                 ),
                 child: Icon(Icons.computer, color: colorScheme.primary),
               ),
@@ -292,7 +292,7 @@ class _ActiveClassCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0), // Pemisah hr vertikal padding
-            child: Divider(color: colorScheme.outlineVariant.withOpacity(0.5)),
+            child: Divider(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
           ),
           Row(
             children: [
@@ -386,7 +386,7 @@ class _AttendanceHistorySummary extends StatelessWidget {
                         height: 40,
                         decoration: BoxDecoration(
                           color: course.type == 'warning'
-                              ? colorScheme.errorContainer.withOpacity(0.3)
+                              ? colorScheme.errorContainer.withValues(alpha: 0.3)
                               : colorScheme.surfaceContainer,
                           borderRadius: BorderRadius.circular(8.0), // Setara rounded-lg
                         ),
