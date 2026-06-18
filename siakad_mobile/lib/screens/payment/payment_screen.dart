@@ -324,7 +324,10 @@ class _BillCard extends StatelessWidget {
                             child: SizedBox(
                               width: useRow ? null : double.infinity,
                               child: ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  '/payment-method',
+                                ),
                                 icon: const Icon(Icons.payment, size: 18),
                                 label: const Text('Pilih Metode Pembayaran'),
                                 style: ElevatedButton.styleFrom(
@@ -469,14 +472,17 @@ class _PaymentMethodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Row(
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, '/payment-method'),
+      borderRadius: BorderRadius.circular(12.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: colorScheme.outlineVariant),
+        ),
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -515,6 +521,7 @@ class _PaymentMethodCard extends StatelessWidget {
           ),
         ],
       ),
+     ),
     );
   }
 }

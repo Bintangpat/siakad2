@@ -8,6 +8,10 @@ import 'screens/main_shell.dart';
 import 'screens/detailkrs_screen.dart';
 import 'screens/news_screen.dart';
 import 'screens/presensi_screen.dart';
+import 'screens/payment/paymentmethod_screen.dart';
+import 'screens/payment/paymentdetail_screen.dart';
+import 'screens/payment/paymentsucces_screen.dart';
+import 'screens/payment/paymentffailed_screen.dart';
 
 void main() {
   runApp(const SiakadApp());
@@ -55,6 +59,10 @@ class SiakadApp extends StatelessWidget {
         '/detail-krs': (_) => const DetailKrsScreen(),
         '/news': (_) => const NewsDetailScreen(),
         '/presensi': (_) => const PresensiScreen(),
+        '/payment-method': (_) => const SiakadPaymentMethodPage(),
+        '/payment-detail': (_) => const SiakadPaymentDetailPage(),
+        '/payment-success': (_) => const SiakadPaymentSuccessPage(),
+        '/payment-failed': (_) => const SiakadPaymentFailedPage(),
       },
     );
   }

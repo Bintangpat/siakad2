@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main_shell.dart';
 
 class SiakadDashboardPage extends StatelessWidget {
   const SiakadDashboardPage({super.key});
@@ -20,7 +21,7 @@ class SiakadDashboardPage extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
           child: GestureDetector(
-            onTap: () {}, // Handle profile tap
+            onTap: () => MainShellScreen.switchTab(context, 4), // Handle profile tap
             child: CircleAvatar(
               radius: 16,
               backgroundColor: colorScheme.outlineVariant,
@@ -61,6 +62,10 @@ class SiakadDashboardPage extends StatelessWidget {
 
               // Quick Stats Row
               const _QuickStatsRow(),
+              const SizedBox(height: 24),
+
+              // Quick Actions
+              const _QuickActionsSection(),
               const SizedBox(height: 24),
 
               // Financial Card
@@ -119,19 +124,21 @@ class _QuickStatsRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: const _StatCard(
+          child: _StatCard(
             icon: Icons.school,
             title: 'IPK Kumulatif',
             value: '3.85',
+            onTap: () => MainShellScreen.switchTab(context, 2),
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: const _StatCard(
+          child: _StatCard(
             icon: Icons.local_library,
             title: 'SKS Aktif',
             value: '22',
             unit: ' SKS',
+            onTap: () => MainShellScreen.switchTab(context, 1),
           ),
         ),
       ],
@@ -144,19 +151,24 @@ class _StatCard extends StatelessWidget {
   final String title;
   final String value;
   final String? unit;
+  final VoidCallback? onTap;
 
   const _StatCard({
     required this.icon,
     required this.title,
     required this.value,
     this.unit,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLowest,
@@ -211,7 +223,8 @@ class _StatCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),
+   );
   }
 }
 
@@ -317,7 +330,7 @@ class _FinancialCard extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                onPressed: () => Navigator.pushNamed(context, '/shell'),
+                onPressed: () => MainShellScreen.switchTab(context, 3),
                 icon: const Icon(
                   Icons.account_balance_wallet_outlined,
                   size: 20,
@@ -517,6 +530,97 @@ class _AnnouncementsSection extends StatelessWidget {
               );
             },
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickActionsSection extends StatelessWidget {
+  const _QuickActionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final List<({IconData icon, String label, Color color, VoidCallback onTap})> actions = [
+      (
+        icon: Icons.qr_code_scanner,
+        label: 'Presensi',
+        color: const Color(0xFF6200EE),
+        onTap: () => Navigator.pushNamed(context, '/presensi'),
+      ),
+      (
+        icon: Icons.assignment_outlined,
+        label: 'KRS',
+        color: const Color(0xFF03DAC6),
+        onTap: () => MainShellScreen.switchTab(context, 1),
+      ),
+      (
+        icon: Icons.school_outlined,
+        label: 'KHS',
+        color: const Color(0xFFFF0266),
+        onTap: () => MainShellScreen.switchTab(context, 2),
+      ),
+      (
+        icon: Icons.payments_outlined,
+        label: 'Tagihan',
+        color: const Color(0xFFCF6679),
+        onTap: () => MainShellScreen.switchTab(context, 3),
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Menu Pintar',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: actions.map((action) {
+            return InkWell(
+              onTap: action.onTap,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                width: 72,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: action.color.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        action.icon,
+                        color: action.color,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      action.label,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ],
     );

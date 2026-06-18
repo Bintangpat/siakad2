@@ -46,7 +46,6 @@ class SiakadProfilePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: _ProfileBottomNavBar(colorScheme: colorScheme),
     );
   }
 }
@@ -229,7 +228,9 @@ class _ProfileHeaderSection extends StatelessWidget {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.1),
+                      color: colorScheme.primaryContainer.withValues(
+                        alpha: 0.1,
+                      ),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
@@ -700,49 +701,3 @@ class _SystemFooter extends StatelessWidget {
   }
 }
 
-// ==========================================
-// SUB-WIDGET: Bottom Navigation Bar
-// ==========================================
-class _ProfileBottomNavBar extends StatelessWidget {
-  final ColorScheme colorScheme;
-
-  const _ProfileBottomNavBar({required this.colorScheme});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 768;
-    if (isDesktop)
-      return const SizedBox.shrink(); // Sesuai aturan anti-pattern hidemode desktop
-
-    return NavigationBar(
-      backgroundColor: colorScheme.surfaceContainer,
-      indicatorColor: colorScheme.primaryContainer,
-      selectedIndex: 3, // Mengunci indeks aktif pada tab ke-4 ("Profile")
-      destinations: [
-        NavigationDestination(
-          icon: Icon(Icons.dashboard_outlined, color: colorScheme.secondary),
-          selectedIcon: Icon(Icons.dashboard, color: colorScheme.primary),
-          label: 'Dashboard',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.assignment_outlined, color: colorScheme.secondary),
-          selectedIcon: Icon(Icons.assignment, color: colorScheme.primary),
-          label: 'KRS',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.payments_outlined, color: colorScheme.secondary),
-          selectedIcon: Icon(Icons.payments, color: colorScheme.primary),
-          label: 'Financial',
-        ),
-        NavigationDestination(
-          icon: Icon(
-            Icons.person_outline,
-            color: colorScheme.onPrimaryContainer,
-          ),
-          selectedIcon: const Icon(Icons.person, color: Colors.white),
-          label: 'Profile',
-        ),
-      ],
-    );
-  }
-}

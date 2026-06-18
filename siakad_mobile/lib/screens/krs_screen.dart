@@ -431,7 +431,31 @@ class _CourseListSection extends StatelessWidget {
                               )
                             : const SizedBox.shrink(),
                       ),
-                      _buildActionButton(context, course.status),
+                      Row(
+                        children: [
+                          if (course.status == 'taken') ...[
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colors.primaryContainer.withValues(alpha: 0.2),
+                                foregroundColor: colors.primary,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                elevation: 0,
+                              ),
+                              onPressed: () => Navigator.pushNamed(context, '/presensi'),
+                              icon: const Icon(Icons.qr_code_scanner, size: 16),
+                              label: const Text(
+                                'Presensi',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          _buildActionButton(context, course.status),
+                        ],
+                      ),
                     ],
                   ),
                 ],
