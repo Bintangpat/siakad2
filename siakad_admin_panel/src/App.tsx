@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
-import DashboardPage from "@/pages/ShellPage";
+import ShellPage from "@/pages/ShellPage";
+import DashboardPage from "@/pages/DashboardPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import NotFoundPage from "@/pages/auth/NotFoundPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +12,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <TooltipProvider>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<ShellPage><DashboardPage /></ShellPage>} />
           <Route path="/login" element={<LoginPage />} />
 
           <Route path="*" element={<NotFoundPage />} />

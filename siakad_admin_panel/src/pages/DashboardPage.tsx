@@ -1,426 +1,385 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ShellPage from "./ShellPage";
 
-/**
- * Komponen DevProgress - User Management
- * Konversi dari HTML ke TSX untuk lingkungan Vite/Next.js.
- * Menggunakan nilai arbitrary Tailwind untuk konsistensi desain tanpa file config eksternal[cite: 2, 4].
- */
+interface Transaction {
+  id: string;
+  name: string;
+  amount: string;
+  status: "VALIDATED" | "PENDING" | "REJECTED";
+  date: string;
+}
 
-const UserManagement = () => {
-  // Variansi Animasi Framer Motion [cite: 7, 8, 9]
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
+export default function App() {
+  const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+
+  // Data Tabel Finansial Dinamis
+  const transactions: Transaction[] = [
+    {
+      id: "20240105",
+      name: "Alexander Wright",
+      amount: "$1,250.00",
+      status: "VALIDATED",
+      date: "Oct 12, 2023",
     },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-  };
+    {
+      id: "20240112",
+      name: "Sophie Chen",
+      amount: "$840.00",
+      status: "PENDING",
+      date: "Oct 11, 2023",
+    },
+    {
+      id: "20240215",
+      name: "Marcus Aurelius",
+      amount: "$1,250.00",
+      status: "VALIDATED",
+      date: "Oct 10, 2023",
+    },
+    {
+      id: "20240301",
+      name: "Elena Gilbert",
+      amount: "$450.00",
+      status: "REJECTED",
+      date: "Oct 09, 2023",
+    },
+  ];
 
   return (
-    <ShellPage>
-    <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] font-sans selection:bg-[#2170e4]/20">
-      {/* Injeksi font dan ikon material [cite: 10, 11] */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
-        
-        .material-symbols-outlined {
-          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-      `,
-        }}
-      />
-
-      {/* Sidebar Navigation [cite: 12] */}
-      <aside className="fixed left-0 top-0 h-full w-[280px] bg-[#eff4ff] dark:bg-[#213145] border-r border-[#c5c6cd] dark:border-[#75777d] flex flex-col py-6 px-4 gap-2 z-50 transition-all duration-150">
-        <div className="flex items-center gap-4 px-2 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-[#1e293b] flex items-center justify-center">
-            <span className="material-symbols-outlined text-white">
-              terminal
+    <div className="bg-background text-on-background min-h-screen antialiased">
+      {/* TopNavBar */}
+      <header className="w-full h-16 sticky top-0 z-40 bg-surface border-b border-outline-variant">
+        <div className="flex justify-between items-center px-lg h-full max-w-container-max mx-auto">
+          {/* Search Box dengan interaksi State React */}
+          <div
+            className={`flex items-center gap-md bg-surface-container-low px-md py-xs rounded-full border transition-all duration-200 w-96 ${isSearchFocused ? "border-primary shadow-sm" : "border-outline-variant"}`}
+          >
+            <span className="material-symbols-outlined text-on-surface-variant">
+              search
             </span>
+            <input
+              className="bg-transparent border-none focus:outline-hidden w-full text-sm placeholder:text-on-surface-variant/60"
+              placeholder="Search administrative records..."
+              type="text"
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+            />
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-[#091426] dark:text-[#d8e3fb]">
-              DevProgress
-            </h2>
-            <p className="text-xs text-[#45474c] opacity-70">
-              Technical Execution
-            </p>
-          </div>
-        </div>
 
-        <nav className="flex-1 flex flex-col gap-1">
-          <NavLink icon="group" label="User Management" active />
-          <NavLink icon="dashboard" label="Global Overview" />
-          <NavLink icon="view_kanban" label="Kanban Board" />
-          <NavLink icon="flag" label="Stakeholder View" />
-        </nav>
-
-        <div className="mt-auto pt-6 border-t border-[#c5c6cd] flex flex-col gap-1">
-          <button className="bg-[#0058be] text-white py-2 px-4 rounded-lg font-bold flex items-center justify-center gap-2 mb-4 hover:brightness-110 transition-all">
-            <span className="material-symbols-outlined text-sm">add</span>
-            <span>Create Project</span>
-          </button>
-          <NavLink icon="settings" label="Settings" />
-          <NavLink icon="logout" label="Logout" isError />
-        </div>
-      </aside>
-
-      {/* Main Content Area [cite: 13] */}
-      <main className="ml-[280px] min-h-screen flex flex-col">
-        {/* TopAppBar [cite: 13] */}
-        <header className="bg-[#f8f9ff] dark:bg-[#1e293b] border-b border-[#c5c6cd] flex justify-between items-center w-full px-6 h-16 sticky top-0 z-40 transition-colors duration-200">
-          <div className="flex items-center gap-6">
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#75777d]">
-                <span className="material-symbols-outlined">search</span>
-              </span>
-              <input
-                className="bg-[#e5eeff] border-none rounded-lg py-2 pl-10 pr-4 w-64 text-sm focus:ring-2 focus:ring-[#0058be] outline-none"
-                placeholder="Search resources..."
-                type="text"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <HeaderIcon icon="notifications" />
-            <HeaderIcon icon="help_outline" />
-            <div className="h-8 w-px bg-[#c5c6cd] mx-2"></div>
-            <div className="flex items-center gap-3">
-              <div className="text-right hidden md:block">
-                <p className="text-sm font-bold text-[#091426]">
-                  Admin Account
-                </p>
-                <p className="text-[10px] uppercase tracking-wider text-[#75777d]">
-                  System Lead
-                </p>
-              </div>
-              <img
-                alt="Profile"
-                className="w-10 h-10 rounded-full border border-[#c5c6cd] object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr477J8Zn5wE2zDSNSGxR1vwD93DlD1VLMgUUEUgkFY9G4-Hdd5k6zAUjU7AB3nC181yQOGPC1eiboRdDs3dG3u25LL_kNU4Sw1GnL5WF3GInJHZvCHKFH1tDwtuie3Eh1J306DoiDWQaNdQI5KDO9X4Ywv8kXsZu4JbTpWJY0cy8l2vfbh3yFj6aFdO9-YSZJ0jBwJafFoLMw0UMVCmPwJwP5zpXYRfRNfc8JL5UTW6NC63Ib2zp6e1caZdTsojjQN1thCUx2WaUB"
-              />
-            </div>
-          </div>
-        </header>
-
-        {/* Canvas Area [cite: 13] */}
-        <div className="p-6 max-w-7xl mx-auto w-full">
-          {/* Page Header [cite: 13] */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-[#091426]">
-                User Management
-              </h1>
-              <p className="text-[#45474c] mt-1">
-                Provision and manage access controls for the DevProgress
-                environment.
-              </p>
-            </div>
-            <button className="bg-[#0058be] text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-[#0058be]/10 hover:-translate-y-px transition-all">
-              <span className="material-symbols-outlined">person_add</span>
-              <span>Add User</span>
+          <div className="flex items-center gap-md">
+            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
+              notifications
             </button>
-          </div>
-
-          {/* Stats Overview [cite: 16] */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
-          >
-            <StatCard label="Total Users" value="1,284" trend="+12%" />
-            <StatCard label="Active Now" value="342" isActive />
-            <StatCard label="Admins" value="12" icon="shield" />
-            <StatCard label="Pending Invites" value="08" icon="mail" />
-          </motion.div>
-
-          {/* Table Section [cite: 16] */}
-          <motion.div
-            variants={itemVariants}
-            initial="hidden"
-            animate="show"
-            className="bg-white border border-[#c5c6cd] rounded-xl overflow-hidden shadow-sm"
-          >
-            <div className="px-6 py-4 border-b border-[#c5c6cd] flex items-center justify-between bg-[#eff4ff]/30">
-              <div className="flex items-center gap-4">
-                <button className="flex items-center gap-1 text-sm text-[#45474c] hover:text-[#091426] font-medium">
-                  <span className="material-symbols-outlined text-[20px]">
-                    filter_list
-                  </span>{" "}
-                  Filter
-                </button>
-                <button className="flex items-center gap-1 text-sm text-[#45474c] hover:text-[#091426] font-medium">
-                  <span className="material-symbols-outlined text-[20px]">
-                    sort
-                  </span>{" "}
-                  Sort
-                </button>
-              </div>
-              <div className="text-xs text-[#75777d]">
-                Displaying 1-10 of 1,284 users
-              </div>
+            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
+              help
+            </button>
+            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
+              settings
+            </button>
+            <div className="h-8 w-px bg-outline-variant mx-xs"></div>
+            <div className="flex items-center gap-sm cursor-pointer hover:bg-surface-container-low p-xs pr-sm rounded-full transition-colors">
+              <img
+                className="w-8 h-8 rounded-full border border-primary object-cover"
+                alt="Admin Profile Portrait"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqPkEuMyAyN4t96gpm7hHuPoqBv0c84UAZNRUgF6NZpkhPI3irJXdG28u5Obn6sVSpX5TMExAgJfjSx4ZE4R8kuXO2OGvxPG57uHYi9PHu1tZ4dLoGuNLxDn2BQ-ZvMzkHfKDU8H09GZVEeQo2mOeSmB3yDAC29BWdiD_6fbZJFW9OBrlVlpAVLRqV01kag3atCGdVDc0GheBnWnmXW_-rzcW_Dzdcirm5DSVPb_Ya9xoPEoYFgIw5w0vtY8N2fzFzcEpK-mFIuTY"
+              />
+              <span className="text-sm font-semibold text-primary">Admin</span>
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-[#eff4ff]/50">
-                  <tr>
-                    <Th label="Name" />
-                    <Th label="Email" />
-                    <Th label="Role" />
-                    <Th label="Status" />
-                    <Th label="Actions" align="right" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#c5c6cd]">
-                  <UserRow
-                    name="Julian Sterling"
-                    email="j.sterling@devprogress.io"
-                    role="Admin"
-                    status="Active"
-                    initials="JS"
-                  />
-                  <UserRow
-                    name="Elena Rodriguez"
-                    email="e.rodriguez@devprogress.io"
-                    role="Developer"
-                    status="Active"
-                    avatar="https://lh3.googleusercontent.com/aida-public/AB6AXuBppXUN8eIgUGTZlzrE33DdYmwoNv8uo2Vwt6Dfm6MSFHKoWRaUPXwI8qkK6LshXUYIjbhGDWXfs__oDRl9JaWiT3UFjRCq2qYotBmtE9-87uqsQxFy1TUfYRJvNBTr390FuhbVPf3DVhG3-21Z1nWvwyyXkKy1loU2SlL4xf4KoPTjCOnruXKSs06HUXpAJBrtDXXJPwmSdjez0-9BxeS-ZcQzXj_dyB5XcQsSb9Uf7T4RxdJA8qyuldlSN65iLqsFuR-E1R35-Nui"
-                  />
-                  <UserRow
-                    name="Marcus Bennet"
-                    email="m.bennet@external.com"
-                    role="Stakeholder"
-                    status="Inactive"
-                    initials="MB"
-                    isTertiary
-                  />
-                  <UserRow
-                    name="Sarah Higgins"
-                    email="s.higgins@devprogress.io"
-                    role="Developer"
-                    status="Active"
-                    initials="SH"
-                  />
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination [cite: 29] */}
-            <div className="px-6 py-4 bg-[#eff4ff]/30 border-t border-[#c5c6cd] flex items-center justify-between">
-              <button className="flex items-center gap-1 px-4 py-2 rounded-lg border border-[#c5c6cd] text-sm text-[#45474c] hover:bg-white transition-all disabled:opacity-30">
-                <span className="material-symbols-outlined">chevron_left</span>{" "}
-                Previous
-              </button>
-              <div className="flex gap-1">
-                <button className="w-8 h-8 rounded bg-[#0058be] text-white font-bold text-xs">
-                  1
-                </button>
-                <button className="w-8 h-8 rounded hover:bg-[#d3e4fe] text-xs transition-colors">
-                  2
-                </button>
-                <button className="w-8 h-8 rounded hover:bg-[#d3e4fe] text-xs transition-colors">
-                  3
-                </button>
-                <span className="w-8 h-8 flex items-center justify-center text-[#75777d]">
-                  ...
-                </span>
-                <button className="w-8 h-8 rounded hover:bg-[#d3e4fe] text-xs transition-colors">
-                  128
-                </button>
-              </div>
-              <button className="flex items-center gap-1 px-4 py-2 rounded-lg border border-[#c5c6cd] text-sm text-[#45474c] hover:bg-white transition-all">
-                Next{" "}
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Bento Grid: Security [cite: 16, 25] */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="md:col-span-2 bg-[#1e293b] text-white p-8 rounded-xl relative overflow-hidden flex flex-col justify-between min-h-[240px]"
-            >
-              <div className="relative z-10">
-                <h3 className="text-2xl font-bold mb-2">
-                  Access Control Audit
-                </h3>
-                <p className="max-w-md opacity-80 mb-6 text-sm">
-                  Review detailed logs of all permission changes and user
-                  creations within the last 24 hours. Ensuring compliance with
-                  ISO 27001 standards.
-                </p>
-                <button className="bg-[#0058be] text-white px-6 py-2 rounded-lg font-bold inline-flex items-center gap-2 hover:brightness-110 transition-all">
-                  View Audit Logs{" "}
-                  <span className="material-symbols-outlined text-sm">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
-              <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#0058be]/20 to-transparent flex items-center justify-center pointer-events-none">
-                <span
-                  className="material-symbols-outlined text-[160px] opacity-10"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  security
-                </span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="bg-[#d3e4fe] p-8 rounded-xl flex flex-col items-center justify-center text-center shadow-sm"
-            >
-              <div className="w-16 h-16 rounded-full bg-[#adc6ff] flex items-center justify-center mb-4">
-                <span
-                  className="material-symbols-outlined text-[#001a42] text-3xl"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  mail
-                </span>
-              </div>
-              <h3 className="text-xl font-bold text-[#091426] mb-1">
-                Invite Team
-              </h3>
-              <p className="text-sm text-[#45474c] mb-6">
-                Send bulk invitations to your engineering organization.
-              </p>
-              <button className="w-full py-2 rounded-lg border border-[#0058be] text-[#0058be] font-bold hover:bg-[#0058be] hover:text-white transition-all">
-                Send Invites
-              </button>
-            </motion.div>
           </div>
         </div>
+      </header>
 
-        <footer className="mt-auto px-6 py-8 text-center border-t border-[#c5c6cd]">
-          <p className="text-xs text-[#75777d]">
-            © 2024 DevProgress Infrastructure. All rights reserved. Precision
-            Technical Execution Platform.
-          </p>
-        </footer>
+      {/* Main Content Area */}
+      <main className="p-lg">
+        <div className="max-w-container-max mx-auto space-y-xl">
+          {/* Dashboard Title & Actions */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-primary">
+                Academic Overview
+              </h2>
+              <p className="text-sm md:text-base text-on-surface-variant">
+                Welcome back, Admin. Here's what's happening at SIAKAD today.
+              </p>
+            </div>
+            <div className="flex gap-sm">
+              <button className="bg-primary text-on-primary px-lg py-sm rounded-lg text-sm font-semibold flex items-center gap-xs hover:opacity-90 transition-opacity cursor-pointer">
+                <span className="material-symbols-outlined text-base">add</span>
+                New Enrollment
+              </button>
+              <button className="border border-primary text-primary px-lg py-sm rounded-lg text-sm font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">
+                Generate Report
+              </button>
+            </div>
+          </div>
+
+          {/* Bento Grid Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+            {/* Total Students */}
+            <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
+              <div className="flex justify-between items-start">
+                <span className="material-symbols-outlined bg-primary-fixed text-on-primary-fixed p-sm rounded-lg">
+                  groups
+                </span>
+                <span className="text-green-600 text-xs font-semibold flex items-center gap-0.5">
+                  +4.2%{" "}
+                  <span className="material-symbols-outlined text-sm">
+                    trending_up
+                  </span>
+                </span>
+              </div>
+              <div className="mt-xl">
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                  Total Active Students
+                </p>
+                <h3 className="text-4xl font-extrabold text-primary mt-xs">
+                  12,480
+                </h3>
+              </div>
+            </div>
+
+            {/* KRS Completion Rate */}
+            <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center gap-lg hover:border-primary transition-colors">
+              <div className="relative w-24 h-24 circular-progress shrink-0">
+                <span className="absolute z-10 text-xl font-bold text-primary">
+                  84%
+                </span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                  KRS Completion
+                </p>
+                <p className="text-xs text-on-surface-variant/80 mt-xs">
+                  Current Semester Progress
+                </p>
+              </div>
+            </div>
+
+            {/* Total Revenue */}
+            <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
+              <div className="flex justify-between items-start">
+                <span className="material-symbols-outlined bg-tertiary-fixed text-on-tertiary-fixed p-sm rounded-lg">
+                  account_balance_wallet
+                </span>
+                <span className="text-on-surface-variant text-xs font-medium">
+                  This Semester
+                </span>
+              </div>
+              <div className="mt-xl">
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                  Total Revenue
+                </p>
+                <div className="flex items-baseline gap-xs">
+                  <h3 className="text-2xl md:text-3xl font-bold text-primary mt-xs">
+                    $4.2M
+                  </h3>
+                  <span className="text-xs font-semibold text-on-surface-variant">
+                    USD
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pending Approvals */}
+            <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
+              <div className="flex justify-between items-start">
+                <span className="material-symbols-outlined bg-error-container text-on-error-container p-sm rounded-lg">
+                  pending_actions
+                </span>
+                <span className="bg-error text-on-error px-sm py-xs rounded-full text-[10px] font-bold">
+                  URGENT
+                </span>
+              </div>
+              <div className="mt-xl">
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                  Pending Approvals
+                </p>
+                <h3 className="text-2xl md:text-3xl font-bold text-error mt-xs">
+                  142
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          {/* Table & Logs Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+            {/* Financial Monitoring Table */}
+            <div className="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+              <div className="p-lg border-b border-outline-variant flex justify-between items-center">
+                <h4 className="text-lg font-bold text-primary">
+                  Financial Monitoring
+                </h4>
+                <button className="text-primary text-sm font-semibold hover:underline cursor-pointer">
+                  View All Transactions
+                </button>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-surface-container-low">
+                    <tr>
+                      <th className="px-lg py-md text-xs font-bold text-on-surface-variant uppercase">
+                        STUDENT ID
+                      </th>
+                      <th className="px-lg py-md text-xs font-bold text-on-surface-variant uppercase">
+                        NAME
+                      </th>
+                      <th className="px-lg py-md text-xs font-bold text-on-surface-variant uppercase">
+                        AMOUNT
+                      </th>
+                      <th className="px-lg py-md text-xs font-bold text-on-surface-variant uppercase">
+                        STATUS
+                      </th>
+                      <th className="px-lg py-md text-xs font-bold text-on-surface-variant uppercase">
+                        DATE
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outline-variant">
+                    {transactions.map((tx) => (
+                      <tr
+                        key={tx.id}
+                        className="hover:bg-surface-container-high transition-colors group"
+                      >
+                        <td className="px-lg py-md text-xs">{tx.id}</td>
+                        <td className="px-lg py-md text-sm font-semibold">
+                          {tx.name}
+                        </td>
+                        <td className="px-lg py-md text-xs">{tx.amount}</td>
+                        <td className="px-lg py-md">
+                          <span
+                            className={`px-sm py-xs rounded text-[11px] font-bold ${
+                              tx.status === "VALIDATED"
+                                ? "bg-green-100 text-green-800"
+                                : tx.status === "PENDING"
+                                  ? "bg-amber-100 text-amber-800"
+                                  : "bg-error-container text-on-error-container"
+                            }`}
+                          >
+                            {tx.status}
+                          </span>
+                        </td>
+                        <td className="px-lg py-md text-xs">{tx.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* System Logs Feed */}
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col">
+              <div className="p-lg border-b border-outline-variant">
+                <h4 className="text-lg font-bold text-primary">System Logs</h4>
+              </div>
+              <div className="p-lg space-y-lg relative">
+                <div className="absolute left-[39px] top-lg bottom-lg w-px bg-outline-variant"></div>
+
+                <div className="flex gap-md relative">
+                  <div className="z-10 bg-primary-fixed text-primary w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
+                    <span className="material-symbols-outlined text-sm">
+                      calendar_today
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">
+                      New Schedule Added
+                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Class "Advanced Quantum Physics" added to Semester 5
+                      timetable.
+                    </p>
+                    <p className="text-[10px] text-outline font-bold mt-xs">
+                      2 MINS AGO
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-md relative">
+                  <div className="z-10 bg-green-100 text-green-800 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
+                    <span className="material-symbols-outlined text-sm">
+                      check_circle
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">
+                      Payment Validated
+                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Tuition fee for Student #20240105 successfully processed.
+                    </p>
+                    <p className="text-[10px] text-outline font-bold mt-xs">
+                      45 MINS AGO
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-md relative">
+                  <div className="z-10 bg-amber-100 text-amber-800 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
+                    <span className="material-symbols-outlined text-sm">
+                      person_add
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">
+                      New Admin Role
+                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Sarah Jenkins granted 'Financial Monitor' access levels.
+                    </p>
+                    <p className="text-[10px] text-outline font-bold mt-xs">
+                      3 HOURS AGO
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-auto p-lg border-t border-outline-variant bg-surface-container-low text-center">
+                <button className="text-sm font-semibold text-primary hover:underline cursor-pointer">
+                  View System History
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Academic Analytics Section */}
+          <div className="bg-primary-container p-xl rounded-xl text-on-primary-container relative overflow-hidden">
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-lg items-center">
+              <div>
+                <h4 className="text-xl md:text-2xl font-bold mb-sm">
+                  Academic Performance Insights
+                </h4>
+                <p className="text-sm opacity-85 mb-lg">
+                  Predictive analysis shows a 12% projected increase in student
+                  retention if current mentorship programs continue their growth
+                  trajectory.
+                </p>
+                <div className="flex gap-md">
+                  <div className="bg-white/10 backdrop-blur-md p-md rounded-lg border border-white/20">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
+                      Retention Rate
+                    </p>
+                    <p className="text-lg font-bold">92.4%</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md p-md rounded-lg border border-white/20">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
+                      GPA Average
+                    </p>
+                    <p className="text-lg font-bold">3.62</p>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden md:block">
+                <div
+                  className="w-full h-48 bg-cover bg-center rounded-xl border border-white/20 shadow-2xl"
+                  style={{
+                    backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJsYNYoUFurE8Lq5b9qmN9utZqXsD2WZ8TxA-Uy5iVR96cRBb4qZUtt2gn6-DMPei80M19MFcSgFmC7lEQRZ62j-B_7S7xDTnlk3dCaTZYAHp7qnAY8puJ6mU8A7xNjbQfdkgWvmN_rnnH-88UZZ49BAZkYjGpTEqOLGTZzFXiyNrLqpYQi5bNkqd0CKfDmLoosmHYTLS6yi-ZnRHSEwI8aGiwlkZOo3sL-1GCfc7zmSUjrwZLKNbqSFLcE9bysBV-YtBy0kEjAgo')`,
+                  }}
+                ></div>
+              </div>
+            </div>
+            {/* Background Aesthetics Blurs */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-fixed-dim/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary-fixed/10 rounded-full blur-3xl"></div>
+          </div>
+        </div>
       </main>
     </div>
   );
-};
-
-// --- Sub-components Helper ---
-
-const NavLink = ({ icon, label, active = false, isError = false }: any) => (
-  <a
-    href="#"
-    className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all font-medium text-sm ${active ? "bg-[#2170e4] text-white" : "text-[#45474c] hover:bg-[#d3e4fe]"} ${isError ? "text-red-600" : ""}`}
-  >
-    <span className="material-symbols-outlined text-[22px]">{icon}</span>
-    <span>{label}</span>
-  </a>
-);
-
-const HeaderIcon = ({ icon }: any) => (
-  <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#45474c] hover:bg-[#e5eeff] transition-colors">
-    <span className="material-symbols-outlined">{icon}</span>
-  </button>
-);
-
-const StatCard = ({ label, value, trend, isActive, icon }: any) => (
-  <div className="bg-white p-4 border border-[#c5c6cd] rounded-xl shadow-sm">
-    <p className="text-[10px] text-[#75777d] font-bold uppercase tracking-widest">
-      {label}
-    </p>
-    <div className="flex items-center justify-between mt-2">
-      <span className="text-2xl font-bold text-[#091426]">{value}</span>
-      {trend && (
-        <span className="text-[#0058be] bg-[#0058be]/10 px-1.5 py-0.5 rounded text-[10px] font-bold">
-          {trend}
-        </span>
-      )}
-      {isActive && (
-        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-      )}
-      {icon && (
-        <span className="material-symbols-outlined text-[#75777d]">{icon}</span>
-      )}
-    </div>
-  </div>
-);
-
-const Th = ({ label, align = "left" }: any) => (
-  <th
-    className={`px-6 py-4 text-[10px] font-bold text-[#75777d] uppercase tracking-widest border-b border-[#c5c6cd] ${align === "right" ? "text-right" : "text-left"}`}
-  >
-    {label}
-  </th>
-);
-
-const UserRow = ({
-  name,
-  email,
-  role,
-  status,
-  initials,
-  avatar,
-  isTertiary,
-}: any) => (
-  <tr className="hover:bg-[#eff4ff]/30 transition-colors group">
-    <td className="px-6 py-4">
-      <div className="flex items-center gap-3">
-        {avatar ? (
-          <img
-            src={avatar}
-            alt={name}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        ) : (
-          <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${role === "Admin" ? "bg-[#091426]" : isTertiary ? "bg-[#0d0093]" : "bg-[#0058be]"}`}
-          >
-            {initials}
-          </div>
-        )}
-        <span className="text-sm font-semibold text-[#091426]">{name}</span>
-      </div>
-    </td>
-    <td className="px-6 py-4 text-xs font-mono text-[#45474c]">{email}</td>
-    <td className="px-6 py-4">
-      <span
-        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${role === "Admin" ? "bg-[#0058be]/10 text-[#0058be]" : isTertiary ? "bg-[#040057]/10 text-[#040057]" : "bg-[#d3e4fe] text-[#45474c]"}`}
-      >
-        {role}
-      </span>
-    </td>
-    <td className="px-6 py-4">
-      <div
-        className={`flex items-center gap-1.5 text-xs font-medium ${status === "Active" ? "text-emerald-600" : "text-[#75777d]"}`}
-      >
-        <div
-          className={`w-1.5 h-1.5 rounded-full ${status === "Active" ? "bg-emerald-500" : "bg-[#75777d]"}`}
-        ></div>{" "}
-        {status}
-      </div>
-    </td>
-    <td className="px-6 py-4 text-right">
-      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button className="p-1.5 text-[#45474c] hover:text-[#0058be] hover:bg-[#0058be]/5 rounded-md transition-all">
-          <span className="material-symbols-outlined text-[20px]">edit</span>
-        </button>
-        <button className="p-1.5 text-[#45474c] hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
-          <span className="material-symbols-outlined text-[20px]">delete</span>
-        </button>
-      </div>
-    </td>
-  </tr>
-  </ShellPage>
-);
-
-export default UserManagement;
+}
