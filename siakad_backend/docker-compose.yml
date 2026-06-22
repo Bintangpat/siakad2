@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  siakad_db:
+    image: postgres:16-alpine
+    container_name: siakad_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-siakad_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-siakad_pass_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-siakad_db}
+    ports:
+      - '5432:5432'
+    volumes:
+      - siakad_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-siakad_user} -d ${POSTGRES_DB:-siakad_db}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: siakad_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@siakad.dev}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+    ports:
+      - '5050:80'
+    depends_on:
+      siakad_db:
+        condition: service_healthy
+    volumes:
+      - siakad_pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  siakad_pgdata:
+    driver: local
+  siakad_pgadmin_data:
+    driver: local

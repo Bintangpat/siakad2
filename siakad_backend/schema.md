@@ -1,0 +1,248 @@
+datasource db {
+provider = "postgresql" // Ganti dengan "mysql" atau "sqlite" jika diperlukan
+url = env("DATABASE_URL")
+}
+
+generator client {
+provider = "prisma-client-js"
+}
+
+// ==========================================
+// 1. TABEL MASTER & AUTENTIKASI
+// ==========================================
+
+enum Role {
+MAHASISWA
+DOSEN
+ADMIN
+KEUANGAN
+}
+
+enum StatusAkademik {
+AKTIF
+CUTI
+NON_AKTIF
+}
+
+enum SemesterTipe {
+GANJIL
+GENAP
+}
+
+enum StatusApproval {
+PENDING
+DISETUJUI
+DITOLAK
+}
+
+enum StatusBayar {
+BELUM_DIBAYAR
+LUNAS
+KEDALUWARSA
+}
+
+enum StatusSesi {
+BELUM_MULAI
+DIBUKA
+DITUTUP
+}
+
+enum StatusKehadiran {
+HADIR
+SAKIT
+IZIN
+ALFA
+}
+
+enum TargetAudien {
+SEMUA
+DOSEN
+MAHASISWA
+}
+
+model User {
+id Int @id @default(autoincrement())
+username String @unique // NIM / NIDN / Username Admin
+password String
+role Role
+namaLengkap String @map("nama_lengkap")
+email String @unique
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @map("updated_at")
+
+// Relations
+mahasiswa Mahasiswa?
+dosen Dosen?
+pengumuman Pengumuman[]
+
+@@map("users")
+}
+
+model Mahasiswa {
+nim String @id
+userId Int @unique @map("user_id")
+angkatan Int
+statusAkademik StatusAkademik @default(AKTIF) @map("status_akademik")
+dosenWaliId String? @map("dosen_wali_id")
+
+// Relations
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+dosenWali Dosen? @relation(fields: [dosenWaliId], references: [nidn], onDelete: SetNull)
+krs Krs[]
+khs Khs[]
+tagihan TagihanPembayaran[]
+absensi AbsensiMahasiswa[]
+
+@@map("mahasiswa")
+}
+
+model Dosen {
+nidn String @id
+userId Int @unique @map("user_id")
+spesialisasi String?
+
+// Relations
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+bimbingan Mahasiswa[] // Mahasiswa yang dibimbing
+jadwalKuliah JadwalKuliah[]
+
+@@map("dosen")
+}
+
+model MataKuliah {
+kodeMk String @id @map("kode_mk")
+namaMk String @map("nama_mk")
+sks Int
+semesterPaket Int @map("semester_paket")
+
+// Relations
+jadwalKuliah JadwalKuliah[]
+
+@@map("mata_kuliah")
+}
+
+model JadwalKuliah {
+id Int @id @default(autoincrement())
+kodeMk String @map("kode_mk")
+nidnDosen String @map("nidn_dosen")
+tahunAkademik String @map("tahun_akademik") // Contoh: "2025/2026"
+semesterTipe SemesterTipe @map("semester_tipe")
+hari String
+jamMulai DateTime @map("jam_mulai") @db.Time
+jamSelesai DateTime @map("jam_selesai") @db.Time
+ruangan String
+kuota Int
+
+// Relations
+mataKuliah MataKuliah @relation(fields: [kodeMk], references: [kodeMk], onDelete: Cascade)
+dosen Dosen @relation(fields: [nidnDosen], references: [nidn], onDelete: Cascade)
+krs Krs[]
+khs Khs[]
+sesiPertemuan SesiPertemuan[]
+
+@@map("jadwal_kuliah")
+}
+
+// ==========================================
+// 2. TABEL FITUR SPESIFIK
+// ==========================================
+
+model Krs {
+id Int @id @default(autoincrement())
+nim String
+jadwalId Int @map("jadwal_id")
+statusApproval StatusApproval @default(PENDING) @map("status_approval")
+catatanDosen String? @map("catatan_dosen") @db.Text
+
+// Relations
+mahasiswa Mahasiswa @relation(fields: [nim], references: [nim], onDelete: Cascade)
+jadwal JadwalKuliah @relation(fields: [jadwalId], references: [id], onDelete: Cascade)
+
+@@unique([nim, jadwalId]) // Mencegah mahasiswa mengambil jadwal yang sama dua kali
+@@map("krs")
+}
+
+model Khs {
+id Int @id @default(autoincrement())
+nim String
+jadwalId Int @map("jadwal_id")
+nilaiTugas Decimal? @map("nilai_tugas") @db.Decimal(5, 2)
+nilaiUts Decimal? @map("nilai_uts") @db.Decimal(5, 2)
+nilaiUas Decimal? @map("nilai_uas") @db.Decimal(5, 2)
+nilaiPresensi Decimal? @map("nilai_presensi") @db.Decimal(5, 2)
+nilaiAngka Decimal? @map("nilai_angka") @db.Decimal(5, 2)
+nilaiHuruf String? @map("nilai_huruf") @db.VarChar(2) // A, B+, C, dll
+bobotIndeks Decimal? @map("bobot_indeks") @db.Decimal(3, 2) // 4.00, 3.00, dll
+
+// Relations
+mahasiswa Mahasiswa @relation(fields: [nim], references: [nim], onDelete: Cascade)
+jadwal JadwalKuliah @relation(fields: [jadwalId], references: [id], onDelete: Cascade)
+
+@@unique([nim, jadwalId])
+@@map("khs")
+}
+
+model TagihanPembayaran {
+id Int @id @default(autoincrement())
+nim String
+jenisTagihan String @map("jenis_tagihan") // UKT, SPI, dll
+nominal Decimal @db.Decimal(12, 2)
+tahunAkademik String @map("tahun_akademik")
+semesterTipe SemesterTipe @map("semester_tipe")
+statusBayar StatusBayar @default(BELUM_DIBAYAR) @map("status_bayar")
+vaNumber String @map("va_number")
+waktuBayar DateTime? @map("waktu_bayar")
+createdAt DateTime @default(now()) @map("created_at")
+
+// Relations
+mahasiswa Mahasiswa @relation(fields: [nim], references: [nim], onDelete: Cascade)
+
+@@map("tagihan_pembayaran")
+}
+
+model SesiPertemuan {
+id Int @id @default(autoincrement())
+jadwalId Int @map("jadwal_id")
+pertemuanKe Int @map("pertemuan_ke")
+tanggal DateTime @db.Date
+qrCodeToken String? @map("qr_code_token")
+statusSesi StatusSesi @default(BELUM_MULAI) @map("status_sesi")
+
+// Relations
+jadwal JadwalKuliah @relation(fields: [jadwalId], references: [id], onDelete: Cascade)
+absensi AbsensiMahasiswa[]
+
+@@unique([jadwalId, pertemuanKe]) // Satu jadwal tidak boleh punya nomor pertemuan duplikat
+@@map("sesi_pertemuan")
+}
+
+model AbsensiMahasiswa {
+id Int @id @default(autoincrement())
+sesiId Int @map("sesi_id")
+nim String
+waktuPresensi DateTime? @map("waktu_presensi")
+statusKehadiran StatusKehadiran @default(ALFA) @map("status_kehadiran")
+
+// Relations
+sesi SesiPertemuan @relation(fields: [sesiId], references: [id], onDelete: Cascade)
+mahasiswa Mahasiswa @relation(fields: [nim], references: [nim], onDelete: Cascade)
+
+@@unique([sesiId, nim]) // Satu mahasiswa hanya punya satu status absen per sesi
+@@map("absensi_mahasiswa")
+}
+
+model Pengumuman {
+id Int @id @default(autoincrement())
+authorId Int @map("author_id")
+judul String
+konten String @db.Text
+fileLampiran String? @map("file_lampiran")
+targetAudien TargetAudien @default(SEMUA) @map("target_audien")
+targetAngkatan Int? @map("target_angkatan")
+createdAt DateTime @default(now()) @map("created_at")
+
+// Relations
+author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+@@map("pengumuman")
+}
