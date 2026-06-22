@@ -63,7 +63,7 @@ export const ScheduleTable: React.FC = () => {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr class="bg-surface-container-low text-on-surface-variant border-b border-outline-variant">
+            <tr className="bg-surface-container-low text-on-surface-variant border-b border-outline-variant">
               <th className="px-md py-3 text-left font-label-md uppercase tracking-wider">
                 Subject
               </th>

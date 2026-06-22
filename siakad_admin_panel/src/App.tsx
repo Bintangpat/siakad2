@@ -5,6 +5,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import NotFoundPage from "@/pages/auth/NotFoundPage";
 import SchedulePage from "@/pages/SchedulePage";
+import FinancialPage from "@/pages/FinancialPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -26,6 +27,14 @@ function App() {
             element={
               <ShellPage>
                 <SchedulePage />
+              </ShellPage>
+            }
+          />
+          <Route
+            path="/financial"
+            element={
+              <ShellPage>
+                <FinancialPage />
               </ShellPage>
             }
           />
