@@ -6,6 +6,8 @@ import LoginPage from "@/pages/auth/LoginPage";
 import NotFoundPage from "@/pages/auth/NotFoundPage";
 import SchedulePage from "@/pages/SchedulePage";
 import FinancialPage from "@/pages/FinancialPage";
+import KrsMonitoringPage from "@/pages/KrsMonitoringPage";
+import AttendancePage from "@/pages/AttendancePage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -42,7 +44,15 @@ function App() {
             path="/krs"
             element={
               <ShellPage>
-                <FinancialPage />
+                <KrsMonitoringPage />
+              </ShellPage>
+            }
+          />
+          <Route
+            path="/attendance"
+            element={
+              <ShellPage>
+                <AttendancePage />
               </ShellPage>
             }
           />
