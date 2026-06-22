@@ -4,6 +4,7 @@ import { FilterSection } from "../components/schedule/FilterSection";
 import { ScheduleTable } from "../components/schedule/ScheduleTable";
 import { MonitoringKrs } from "../components/schedule/MonitoringKrs";
 import { Download, Plus } from "lucide-react";
+import { Footer } from "@/components/layout/Footer";
 
 export const SchedulePage: React.FC = () => {
   const [activeView, setActiveView] = useState<"schedule" | "monitoring">(
@@ -92,6 +93,7 @@ export const SchedulePage: React.FC = () => {
           {activeView === "monitoring" && <MonitoringKrs />}
         </section>
       </main>
+      <Footer />
     </div>
   );
 };
