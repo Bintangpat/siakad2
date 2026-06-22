@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import DashboardPage from "@/pages/DashboardPage";
+import DashboardPage from "@/pages/ShellPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import NotFoundPage from "@/pages/auth/NotFoundPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
