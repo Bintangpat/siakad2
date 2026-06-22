@@ -38,6 +38,14 @@ function App() {
               </ShellPage>
             }
           />
+          <Route
+            path="/krs"
+            element={
+              <ShellPage>
+                <FinancialPage />
+              </ShellPage>
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
