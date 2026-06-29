@@ -20,7 +20,7 @@ export const OverrideModal: React.FC<OverrideModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 z-60 flex items-center justify-center p-4">
       <div className="bg-surface-container-lowest max-w-md w-full rounded-xl shadow-2xl overflow-hidden border border-outline-variant animate-in fade-in zoom-in duration-200">
         <div className="p-6 border-b border-outline-variant flex justify-between items-center">
           <h5 className="font-headline-sm text-headline-sm text-primary">
