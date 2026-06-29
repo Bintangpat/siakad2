@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Header } from "../components/layout/Header";
-import { FilterSection } from "../components/schedule/FilterSection";
-import { ScheduleTable } from "../components/schedule/ScheduleTable";
-import { MonitoringKrs } from "../components/schedule/MonitoringKrs";
+import { Header } from "@/components/layout/Header";
+import { FilterSection } from "@/components/schedule/FilterSection";
+import { ScheduleTable } from "@/components/schedule/ScheduleTable";
+import { MonitoringKrs } from "@/components/schedule/MonitoringKrs";
 import { Download, Plus } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 

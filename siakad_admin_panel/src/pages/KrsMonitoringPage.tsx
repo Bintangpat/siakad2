@@ -1,8 +1,8 @@
 import React from "react";
-import { Header } from "../components/layout/Header";
-import { SummaryCards } from "../components/krs/SummaryCards";
-import { KrsTable } from "../components/krs/KrsTable";
-import { AnalyticsPreview } from "../components/krs/AnalyticsPreview";
+import { Header } from "@/components/layout/Header";
+import { SummaryCards } from "@/components/krs/SummaryCards";
+import { KrsTable } from "@/components/krs/KrsTable";
+import { AnalyticsPreview } from "@/components/krs/AnalyticsPreview";
 import { Mail, CheckSquare } from "lucide-react";
 
 export const KrsMonitoringPage: React.FC = () => {

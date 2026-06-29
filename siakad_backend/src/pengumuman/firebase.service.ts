@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as admin from 'firebase-admin';
+import { initializeApp, cert } from 'firebase-admin';
+import { getMessaging, Messaging } from 'firebase-admin/messaging';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -13,15 +14,19 @@ export class FirebaseService implements OnModuleInit {
     try {
       const projectId = this.config.get('FIREBASE_PROJECT_ID');
       const clientEmail = this.config.get('FIREBASE_CLIENT_EMAIL');
-      const privateKey = this.config.get<string>('FIREBASE_PRIVATE_KEY')?.replace(/\\n/g, '\n');
+      const privateKey = this.config
+        .get<string>('FIREBASE_PRIVATE_KEY')
+        ?.replace(/\\n/g, '\n');
 
       if (!projectId || !clientEmail || !privateKey) {
-        this.logger.warn('Firebase credentials belum dikonfigurasi — push notification dinonaktifkan');
+        this.logger.warn(
+          'Firebase credentials belum dikonfigurasi — push notification dinonaktifkan',
+        );
         return;
       }
 
-      this.app = admin.initializeApp({
-        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+      this.app = initializeApp({
+        credential: cert({ projectId, clientEmail, privateKey }),
       });
 
       this.logger.log('Firebase Admin SDK initialized');
@@ -30,14 +35,19 @@ export class FirebaseService implements OnModuleInit {
     }
   }
 
-  async sendToTopic(topic: string, title: string, body: string, data?: Record<string, string>) {
+  async sendToTopic(
+    topic: string,
+    title: string,
+    body: string,
+    data?: Record<string, string>,
+  ) {
     if (!this.app) {
       this.logger.warn('Firebase tidak aktif — notifikasi dilewati');
       return;
     }
 
     try {
-      await admin.messaging().send({
+      await getMessaging(this.app).send({
         topic,
         notification: { title, body },
         data,

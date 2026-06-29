@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Header } from "../components/layout/Header";
-import { StatsGrid } from "../components/financial/StatsGrid";
-import { FinancialCharts } from "../components/financial/FinancialCharts";
-import { TransactionTable } from "../components/financial/TransactionTable";
+import { Header } from "@/components/layout/Header";
+import { StatsGrid } from "@/components/financial/StatsGrid";
+import { FinancialCharts } from "@/components/financial/FinancialCharts";
+import { TransactionTable } from "@/components/financial/TransactionTable";
 import { Filter, FileText, Plus } from "lucide-react";
 
 export const FinancialPage: React.FC = () => {

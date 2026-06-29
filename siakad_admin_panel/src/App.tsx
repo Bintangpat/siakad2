@@ -8,6 +8,7 @@ import SchedulePage from "@/pages/SchedulePage";
 import FinancialPage from "@/pages/FinancialPage";
 import KrsMonitoringPage from "@/pages/KrsMonitoringPage";
 import AttendancePage from "@/pages/AttendancePage";
+import KrsSetupPage from "@/pages/KrsSetupPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -45,6 +46,14 @@ function App() {
             element={
               <ShellPage>
                 <KrsMonitoringPage />
+              </ShellPage>
+            }
+          />
+          <Route
+            path="/krs/krs-setup"
+            element={
+              <ShellPage>
+                <KrsSetupPage />
               </ShellPage>
             }
           />
