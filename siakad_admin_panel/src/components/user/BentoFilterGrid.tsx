@@ -40,8 +40,9 @@ export const BentoFilterGrid: React.FC<BentoFilterProps> = ({
           >
             <option value="All Roles">All Roles</option>
             <option value="ADMIN">Admin</option>
-            <option value="LECTURER">Lecturer</option>
-            <option value="STUDENT">Student</option>
+            <option value="DOSEN">Dosen (Lecturer)</option>
+            <option value="MAHASISWA">Mahasiswa (Student)</option>
+            <option value="KEUANGAN">Keuangan (Finance)</option>
           </select>
           <select
             className="bg-surface-container border border-outline rounded-lg py-2 px-4 text-sm font-semibold text-on-surface-variant focus:ring-primary focus:border-primary outline-none"

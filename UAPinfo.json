@@ -1,0 +1,53 @@
+{
+  "university": "Universitas Aisyah Pringsewu",
+  "faculties": [
+    {
+      "name": "Fakultas Kesehatan",
+      "programs": [
+        "D3 Kebidanan",
+        "D3 Rekam Medis dan Informasi Kesehatan",
+        "D4 Keperawatan Anestesiologi",
+        "S1 Farmasi",
+        "S1 Farmasi (Konversi)",
+        "S1 Gizi",
+        "S1 Gizi (Konversi)",
+        "S1 Kebidanan",
+        "S1 Kebidanan (Konversi)",
+        "S1 Keperawatan",
+        "S1 Keperawatan (Konversi)",
+        "S2 Kebidanan",
+        "S2 Keperawatan",
+        "Pendidikan Profesi Ners",
+        "Pendidikan Profesi Bidan",
+        "Pendidikan Profesi Dietisien",
+        "Program Profesi Apoteker"
+      ]
+    },
+    {
+      "name": "Fakultas Teknologi dan Informatika",
+      "programs": ["S1 Teknik Informatika", "S1 Rekayasa Perangkat Lunak"]
+    },
+    {
+      "name": "Fakultas Sosial dan Bisnis",
+      "programs": ["S1 Psikologi", "S1 Akuntansi"]
+    },
+    {
+      "name": "Fakultas Keguruan dan Ilmu Pendidikan",
+      "programs": [
+        "S1 Teknologi Pendidikan",
+        "S1 Pendidikan Guru Sekolah Dasar",
+        "S1 Pendidikan Jasmani, Kesehatan dan Rekreasi",
+        "S1 Pendidikan Bahasa Inggris"
+      ]
+    },
+    {
+      "name": "Fakultas Kedokteran",
+      "programs": [
+        "S1 Pendidikan Dokter",
+        "Profesi Dokter",
+        "S1 Dokter Umum",
+        "S1 Dokter Gigi"
+      ]
+    }
+  ]
+}

@@ -13,19 +13,42 @@ export const AddUserPage: React.FC = () => {
     idNumber: "",
     faculty: "",
     studyProgram: "",
+    password: "",
   });
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!role) {
       alert("Mohon pilih Hak Akses Sistem (System Role) terlebih dahulu.");
       return;
     }
+    
+    if (!formData.password) {
+      alert("Mohon masukkan password awal untuk pengguna.");
+      return;
+    }
 
     setStatus("saving");
 
-    // Simulasi otentikasi/penyimpanan jaringan
-    setTimeout(() => {
+    try {
+      // Panggil backend API
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.idNumber,
+          password: formData.password,
+          role: role,
+          namaLengkap: formData.fullName,
+          email: formData.email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save user");
+      }
+
       setStatus("success");
       setTimeout(() => {
         setStatus("idle");
@@ -36,10 +59,15 @@ export const AddUserPage: React.FC = () => {
           idNumber: "",
           faculty: "",
           studyProgram: "",
+          password: "",
         });
         setRole("");
       }, 2000);
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menyimpan pengguna.");
+      setStatus("idle");
+    }
   };
 
   return (

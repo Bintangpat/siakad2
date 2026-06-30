@@ -13,7 +13,15 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, FrameIcon, PieChartIcon, MapIcon } from "lucide-react"
+import {
+  LayoutDashboardIcon,
+  BookOpenIcon,
+  BanknoteIcon,
+  UsersIcon,
+  GalleryVerticalEndIcon,
+  AudioLinesIcon,
+  TerminalIcon
+} from "lucide-react"
 
 // This is sample data.
 const data = {
@@ -50,129 +58,76 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Dashboard",
+      url: "/",
       icon: (
-        <TerminalSquareIcon
-        />
+        <LayoutDashboardIcon />
       ),
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
+          title: "Overview",
+          url: "/",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Academics",
       url: "#",
       icon: (
-        <BotIcon
-        />
+        <BookOpenIcon />
       ),
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Class Schedule",
+          url: "/schedule",
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: "KRS Monitoring",
+          url: "/krs",
         },
         {
-          title: "Quantum",
-          url: "#",
+          title: "KRS Setup",
+          url: "/krs/krs-setup",
         },
+        {
+          title: "Attendance",
+          url: "/attendance",
+        }
       ],
     },
     {
-      title: "Documentation",
+      title: "Financial",
       url: "#",
       icon: (
-        <BookOpenIcon
-        />
+        <BanknoteIcon />
       ),
       items: [
         {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+          title: "Overview",
+          url: "/financial",
+        }
       ],
     },
     {
-      title: "Settings",
+      title: "User Management",
       url: "#",
       icon: (
-        <Settings2Icon
-        />
+        <UsersIcon />
       ),
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "All Users",
+          url: "/users",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+          title: "Add User",
+          url: "/users/add",
+        }
       ],
     },
   ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: (
-        <FrameIcon
-        />
-      ),
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: (
-        <PieChartIcon
-        />
-      ),
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <MapIcon
-        />
-      ),
-    },
-  ],
+  projects: [],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

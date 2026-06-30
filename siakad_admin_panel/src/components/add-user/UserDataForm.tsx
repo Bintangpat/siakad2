@@ -1,5 +1,6 @@
 import React from "react";
 import { Save, Loader2, CheckCircle2, ChevronDown } from "lucide-react";
+import uapData from "../../../../UAPinfo.json";
 
 interface UserDataFormProps {
   formData: {
@@ -8,6 +9,7 @@ interface UserDataFormProps {
     idNumber: string;
     faculty: string;
     studyProgram: string;
+    password?: string;
   };
   setFormData: React.Dispatch<
     React.SetStateAction<{
@@ -16,6 +18,7 @@ interface UserDataFormProps {
       idNumber: string;
       faculty: string;
       studyProgram: string;
+      password?: string;
     }>
   >;
   status: "idle" | "saving" | "success";
@@ -32,8 +35,19 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      // Reset studyProgram if faculty changes
+      if (name === "faculty") {
+        return { ...prev, [name]: value, studyProgram: "" };
+      }
+      return { ...prev, [name]: value };
+    });
   };
+
+  const selectedFacultyData = uapData.faculties.find(
+    (f) => f.name === formData.faculty
+  );
+  const availablePrograms = selectedFacultyData ? selectedFacultyData.programs : [];
 
   return (
     <div className="lg:col-span-8 flex flex-col gap-6 text-left">
@@ -73,7 +87,7 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
               required
             />
           </div>
-          <div className="flex flex-col gap-1 md:col-span-2">
+          <div className="flex flex-col gap-1 md:col-span-1">
             <label className="text-sm font-semibold text-on-surface-variant">
               Identification Number (NIM/NIDN)
             </label>
@@ -83,6 +97,20 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
               name="idNumber"
               placeholder="e.g., 202401001"
               value={formData.idNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1 md:col-span-1">
+            <label className="text-sm font-semibold text-on-surface-variant">
+              Initial Password
+            </label>
+            <input
+              className="h-11 px-4 border border-outline-variant rounded-lg text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              type="password"
+              name="password"
+              placeholder="Enter temporary password"
+              value={formData.password || ""}
               onChange={handleChange}
               required
             />
@@ -113,10 +141,11 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
                 <option value="" disabled>
                   Select Faculty
                 </option>
-                <option>Faculty of Engineering</option>
-                <option>Faculty of Economics & Business</option>
-                <option>Faculty of Medicine</option>
-                <option>Faculty of Computer Science</option>
+                {uapData.faculties.map((f, idx) => (
+                  <option key={idx} value={f.name}>
+                    {f.name}
+                  </option>
+                ))}
               </select>
               <ChevronDown className="w-5 h-5 absolute right-3 top-3 pointer-events-none text-on-surface-variant" />
             </div>
@@ -136,10 +165,11 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
                 <option value="" disabled>
                   Select Program
                 </option>
-                <option>Informatics Engineering</option>
-                <option>Information Systems</option>
-                <option>Management</option>
-                <option>Accounting</option>
+                {availablePrograms.map((prog, idx) => (
+                  <option key={idx} value={prog}>
+                    {prog}
+                  </option>
+                ))}
               </select>
               <ChevronDown className="w-5 h-5 absolute right-3 top-3 pointer-events-none text-on-surface-variant" />
             </div>

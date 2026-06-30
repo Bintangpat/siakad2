@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 interface Transaction {
   id: string;
@@ -8,40 +9,56 @@ interface Transaction {
   date: string;
 }
 
+interface DashboardStats {
+  totalActiveStudents: number;
+  krsCompletionRate: number;
+  totalRevenue: number;
+  pendingApprovals: number;
+}
+
 export default function App() {
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loadingStats, setLoadingStats] = useState(true);
 
-  // Data Tabel Finansial Dinamis
-  const transactions: Transaction[] = [
-    {
-      id: "20240105",
-      name: "Alexander Wright",
-      amount: "$1,250.00",
-      status: "VALIDATED",
-      date: "Oct 12, 2023",
-    },
-    {
-      id: "20240112",
-      name: "Sophie Chen",
-      amount: "$840.00",
-      status: "PENDING",
-      date: "Oct 11, 2023",
-    },
-    {
-      id: "20240215",
-      name: "Marcus Aurelius",
-      amount: "$1,250.00",
-      status: "VALIDATED",
-      date: "Oct 10, 2023",
-    },
-    {
-      id: "20240301",
-      name: "Elena Gilbert",
-      amount: "$450.00",
-      status: "REJECTED",
-      date: "Oct 09, 2023",
-    },
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/dashboard/stats');
+        setStats(response.data);
+      } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loadingTx, setLoadingTx] = useState(true);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await api.get('/pembayaran');
+        // Map backend tagihan to Transaction format
+        const mappedTx = response.data.slice(0, 5).map((t: any) => ({
+          id: t.nim,
+          name: t.mahasiswa?.user?.namaLengkap || "Unknown",
+          amount: `$${t.nominal.toLocaleString()}`,
+          status: t.statusBayar === 'LUNAS' ? 'VALIDATED' : 'PENDING',
+          date: new Date(t.createdAt).toLocaleDateString()
+        }));
+        setTransactions(mappedTx);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      } finally {
+        setLoadingTx(false);
+      }
+    };
+    fetchTransactions();
+  }, []);
 
   return (
     <div className="bg-background text-on-background min-h-screen antialiased">
@@ -131,7 +148,7 @@ export default function App() {
                   Total Active Students
                 </p>
                 <h3 className="text-4xl font-extrabold text-primary mt-xs">
-                  12,480
+                  {loadingStats ? "..." : stats?.totalActiveStudents.toLocaleString()}
                 </h3>
               </div>
             </div>
@@ -140,7 +157,7 @@ export default function App() {
             <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center gap-lg hover:border-primary transition-colors">
               <div className="relative w-24 h-24 circular-progress shrink-0">
                 <span className="absolute z-10 text-xl font-bold text-primary">
-                  84%
+                  {loadingStats ? "..." : `${stats?.krsCompletionRate}%`}
                 </span>
               </div>
               <div>
@@ -169,7 +186,7 @@ export default function App() {
                 </p>
                 <div className="flex items-baseline gap-xs">
                   <h3 className="text-2xl md:text-3xl font-bold text-primary mt-xs">
-                    $4.2M
+                    {loadingStats ? "..." : `$${(stats?.totalRevenue || 0).toLocaleString()}`}
                   </h3>
                   <span className="text-xs font-semibold text-on-surface-variant">
                     USD
@@ -193,7 +210,7 @@ export default function App() {
                   Pending Approvals
                 </p>
                 <h3 className="text-2xl md:text-3xl font-bold text-error mt-xs">
-                  142
+                  {loadingStats ? "..." : stats?.pendingApprovals.toLocaleString()}
                 </h3>
               </div>
             </div>

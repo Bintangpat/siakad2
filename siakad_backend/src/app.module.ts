@@ -10,6 +10,8 @@ import { KhsModule } from './khs/khs.module';
 import { PembayaranModule } from './pembayaran/pembayaran.module';
 import { PengumumanModule } from './pengumuman/pengumuman.module';
 import { AbsensiModule } from './absensi/absensi.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { AbsensiModule } from './absensi/absensi.module';
     PembayaranModule,
     PengumumanModule,
     AbsensiModule,
+    DashboardModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

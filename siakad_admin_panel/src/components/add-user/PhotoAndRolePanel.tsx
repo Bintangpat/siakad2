@@ -55,9 +55,10 @@ export const PhotoAndRolePanel: React.FC<PhotoAndRolePanelProps> = ({
               <option value="" disabled>
                 Select Role
               </option>
-              <option value="mahasiswa">Mahasiswa (Student)</option>
-              <option value="dosen">Dosen (Lecturer)</option>
-              <option value="admin">Admin</option>
+              <option value="MAHASISWA">Mahasiswa (Student)</option>
+              <option value="DOSEN">Dosen (Lecturer)</option>
+              <option value="ADMIN">Admin</option>
+              <option value="KEUANGAN">Keuangan (Finance)</option>
             </select>
             <ChevronDown className="w-5 h-5 absolute right-3 top-3 pointer-events-none text-on-surface-variant" />
           </div>
