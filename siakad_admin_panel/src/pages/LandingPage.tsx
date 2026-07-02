@@ -16,9 +16,15 @@ import {
   Headphones,
   Mail,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const cardsRef = useRef<HTMLDivElement[]>([]);
+  const navigate = useNavigate();
+
+  const goToLogin = () => {
+    navigate("/auth/login");
+  };
 
   // Simple Scroll Fade-in Interaction menggunakan Intersection Observer
   useEffect(() => {
@@ -114,10 +120,14 @@ export default function LandingPage() {
                 akademika.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                <button className="bg-primary text-on-primary px-8 py-4 rounded-lg text-sm font-semibold tracking-wide hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                <button
+                  onClick={goToLogin}
+                  className="bg-primary text-on-primary px-8 py-4 rounded-lg text-sm font-semibold tracking-wide hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                >
                   Masuk ke Portal
                   <ArrowRight className="w-4 h-4" />
                 </button>
+
                 <button className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-sm font-semibold tracking-wide hover:bg-primary-container/5 transition-all flex items-center justify-center gap-2">
                   Panduan Pengguna
                   <HelpCircle className="w-4 h-4" />

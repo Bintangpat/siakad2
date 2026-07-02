@@ -13,12 +13,12 @@ export const AddUserPage: React.FC = () => {
       <Header />
 
       {/* Main Content Canvas Grid */}
-      <main className="flex-grow pt-32 pb-8 px-4 md:px-10 max-w-7xl mx-auto w-full">
+      <main className="grow pt-32 pb-8 px-4 md:px-10 max-w-7xl mx-auto w-full">
         <div className="mb-8 text-left">
           <h1 className="text-2xl md:text-3xl font-bold text-primary mb-1">
             Add New User
           </h1>
-          <p className="text-base text-on-surface-variant">
+          <p className="text-base text-foreground">
             Register a new student, lecturer, or administrator into the academic
             system.
           </p>
