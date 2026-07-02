@@ -6,6 +6,16 @@ import { UserTable, type UserItem } from "@/components/user/UserTable";
 import { ManagementInsights } from "@/components/user/ManagementInsights";
 import { Footer } from "@/components/user/Footer";
 
+interface BackendUser {
+  id: number;
+  namaLengkap?: string;
+  email: string;
+  username: string;
+  role: "MAHASISWA" | "DOSEN" | "ADMIN" | "KEUANGAN";
+  mahasiswa?: unknown;
+  dosen?: unknown;
+}
+
 export const UserManagementPage: React.FC = () => {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +41,7 @@ export const UserManagementPage: React.FC = () => {
             return;
           }
 
-          const mappedUsers = arrayUser.map((u: any) => {
+          const mappedUsers = arrayUser.map((u: BackendUser) => {
             const initials = u.namaLengkap
               ? u.namaLengkap
                   .split(" ")

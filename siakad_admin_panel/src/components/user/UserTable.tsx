@@ -47,7 +47,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users }) => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y bg-background divide-outline-variant">
-          {users.map((user, index) => (
+          {users.map((user) => (
             <TableRow
               key={user.id}
               className="hover:bg-tertiary text-foreground transition-all duration-300 border-outline-variant"

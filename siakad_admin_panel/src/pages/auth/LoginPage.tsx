@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Header } from "@/components/layout/Header";
 import { BrandingHeader } from "@/components/layout/BrandingHeader";
 import { LoginForm } from "@/components/login/LoginForm";
 
 export const LoginPage: React.FC = () => {
-  const [bgPosition, setBgPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 10;
-      const y = (e.clientY / window.innerHeight) * 10;
-      setBgPosition({ x, y });
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   return (
     <div className="bg-background w-full flex flex-col h-screen items-center transition-all duration-300">

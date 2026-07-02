@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { api } from "@/lib/api";
 
 export interface User {
@@ -19,16 +26,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await api.get('/auth/me');
+        const response = await api.get("/auth/me");
         if (response.data && response.data.data) {
           setUser(response.data.data);
+          // Redirect to dashboard if logged in and on the login page
+          if (window.location.pathname === "/auth/login") {
+            window.location.href = "/dashboard";
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user profile", error);

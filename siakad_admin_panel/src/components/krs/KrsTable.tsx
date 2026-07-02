@@ -18,7 +18,7 @@ interface StudentKrs {
 
 export const KrsTable: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [students, setStudents] = useState<StudentKrs[]>([
+  const [students] = useState<StudentKrs[]>([
     {
       id: "1",
       nim: "20210801234",

@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
+import {
+  Search,
+  Bell,
+  HelpCircle,
+  Settings,
+  Plus,
+  Users,
+  TrendingUp,
+  Wallet,
+  Clock,
+  Calendar,
+  CheckCircle2,
+  UserPlus,
+} from "lucide-react";
 
 interface Transaction {
   id: string;
@@ -25,7 +39,7 @@ export default function App() {
     const fetchStats = async () => {
       try {
         const response = await api.get("/dashboard/stats");
-        setStats(response.data);
+        setStats(response.data.data);
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
       } finally {
@@ -36,13 +50,11 @@ export default function App() {
   }, []);
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loadingTx, setLoadingTx] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await api.get("/pembayaran");
-        // Map backend tagihan to Transaction format
         const mappedTx = response.data.slice(0, 5).map((t: any) => ({
           id: t.nim,
           name: t.mahasiswa?.user?.namaLengkap || "Unknown",
@@ -53,8 +65,6 @@ export default function App() {
         setTransactions(mappedTx);
       } catch (error) {
         console.error("Error fetching transactions:", error);
-      } finally {
-        setLoadingTx(false);
       }
     };
     fetchTransactions();
@@ -65,13 +75,11 @@ export default function App() {
       {/* TopNavBar */}
       <header className="w-full h-16 sticky top-0 z-40 bg-surface border-b border-outline-variant">
         <div className="flex justify-between items-center px-lg h-full max-w-container-max mx-auto">
-          {/* Search Box dengan interaksi State React */}
+          {/* Search Box */}
           <div
             className={`flex items-center gap-md bg-surface-container-low px-md py-xs rounded-full border transition-all duration-200 w-96 ${isSearchFocused ? "border-primary shadow-sm" : "border-outline-variant"}`}
           >
-            <span className="material-symbols-outlined text-on-surface-variant">
-              search
-            </span>
+            <Search className="w-5 h-5 text-on-surface-variant shrink-0" />
             <input
               className="bg-transparent border-none focus:outline-hidden w-full text-sm placeholder:text-on-surface-variant/60"
               placeholder="Search administrative records..."
@@ -82,14 +90,14 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-md">
-            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
-              notifications
+            <button className="hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer flex items-center justify-center">
+              <Bell className="w-5 h-5 text-on-surface-variant" />
             </button>
-            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
-              help
+            <button className="hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer flex items-center justify-center">
+              <HelpCircle className="w-5 h-5 text-on-surface-variant" />
             </button>
-            <button className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer">
-              settings
+            <button className="hover:bg-surface-container-low p-sm rounded-full transition-colors cursor-pointer flex items-center justify-center">
+              <Settings className="w-5 h-5 text-on-surface-variant" />
             </button>
             <div className="h-8 w-px bg-outline-variant mx-xs"></div>
             <div className="flex items-center gap-sm cursor-pointer hover:bg-surface-container-low p-xs pr-sm rounded-full transition-colors">
@@ -119,7 +127,7 @@ export default function App() {
             </div>
             <div className="flex gap-sm">
               <button className="bg-primary text-on-primary px-lg py-sm rounded-lg text-sm font-semibold flex items-center gap-xs hover:opacity-90 transition-opacity cursor-pointer">
-                <span className="material-symbols-outlined text-base">add</span>
+                <Plus className="w-4 h-4" />
                 New Enrollment
               </button>
               <button className="border border-primary text-primary px-lg py-sm rounded-lg text-sm font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">
@@ -133,14 +141,11 @@ export default function App() {
             {/* Total Students */}
             <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
               <div className="flex justify-between items-start">
-                <span className="material-symbols-outlined bg-primary-fixed text-on-primary-fixed p-sm rounded-lg">
-                  groups
-                </span>
+                <div className="bg-primary-fixed text-on-primary-fixed p-sm rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5" />
+                </div>
                 <span className="text-green-600 text-xs font-semibold flex items-center gap-0.5">
-                  +4.2%{" "}
-                  <span className="material-symbols-outlined text-sm">
-                    trending_up
-                  </span>
+                  +4.2% <TrendingUp className="w-3.5 h-3.5" />
                 </span>
               </div>
               <div className="mt-xl">
@@ -150,14 +155,14 @@ export default function App() {
                 <h3 className="text-4xl font-extrabold text-primary mt-xs">
                   {loadingStats
                     ? "..."
-                    : stats?.totalActiveStudents.toLocaleString()}
+                    : (stats?.totalActiveStudents?.toLocaleString() ?? "0")}
                 </h3>
               </div>
             </div>
 
             {/* KRS Completion Rate */}
             <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center gap-lg hover:border-primary transition-colors">
-              <div className="relative w-24 h-24 circular-progress shrink-0">
+              <div className="relative w-24 h-24 circular-progress shrink-0 flex items-center justify-center">
                 <span className="absolute z-10 text-xl font-bold text-primary">
                   {loadingStats ? "..." : `${stats?.krsCompletionRate}%`}
                 </span>
@@ -175,9 +180,9 @@ export default function App() {
             {/* Total Revenue */}
             <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
               <div className="flex justify-between items-start">
-                <span className="material-symbols-outlined bg-tertiary-fixed text-on-tertiary-fixed p-sm rounded-lg">
-                  account_balance_wallet
-                </span>
+                <div className="bg-tertiary-fixed text-on-tertiary-fixed p-sm rounded-lg flex items-center justify-center">
+                  <Wallet className="w-5 h-5" />
+                </div>
                 <span className="text-on-surface-variant text-xs font-medium">
                   This Semester
                 </span>
@@ -190,7 +195,7 @@ export default function App() {
                   <h3 className="text-2xl md:text-3xl font-bold text-primary mt-xs">
                     {loadingStats
                       ? "..."
-                      : `$${(stats?.totalRevenue || 0).toLocaleString()}`}
+                      : (stats?.totalRevenue?.toLocaleString() ?? "0")}
                   </h3>
                   <span className="text-xs font-semibold text-on-surface-variant">
                     USD
@@ -202,9 +207,9 @@ export default function App() {
             {/* Pending Approvals */}
             <div className="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col justify-between hover:border-primary transition-colors">
               <div className="flex justify-between items-start">
-                <span className="material-symbols-outlined bg-error-container text-on-error-container p-sm rounded-lg">
-                  pending_actions
-                </span>
+                <div className="bg-error-container text-on-error-container p-sm rounded-lg flex items-center justify-center">
+                  <Clock className="w-5 h-5" />
+                </div>
                 <span className="bg-error text-on-error px-sm py-xs rounded-full text-[10px] font-bold">
                   URGENT
                 </span>
@@ -216,7 +221,7 @@ export default function App() {
                 <h3 className="text-2xl md:text-3xl font-bold text-error mt-xs">
                   {loadingStats
                     ? "..."
-                    : stats?.pendingApprovals.toLocaleString()}
+                    : (stats?.pendingApprovals?.toLocaleString() ?? "0")}
                 </h3>
               </div>
             </div>
@@ -297,9 +302,7 @@ export default function App() {
 
                 <div className="flex gap-md relative">
                   <div className="z-10 bg-primary-fixed text-primary w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
-                    <span className="material-symbols-outlined text-sm">
-                      calendar_today
-                    </span>
+                    <Calendar className="w-4 h-4" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-on-surface">
@@ -317,9 +320,7 @@ export default function App() {
 
                 <div className="flex gap-md relative">
                   <div className="z-10 bg-green-100 text-green-800 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
-                    <span className="material-symbols-outlined text-sm">
-                      check_circle
-                    </span>
+                    <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-on-surface">
@@ -336,9 +337,7 @@ export default function App() {
 
                 <div className="flex gap-md relative">
                   <div className="z-10 bg-amber-100 text-amber-800 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-xs">
-                    <span className="material-symbols-outlined text-sm">
-                      person_add
-                    </span>
+                    <UserPlus className="w-4 h-4" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-on-surface">
@@ -397,7 +396,6 @@ export default function App() {
                 ></div>
               </div>
             </div>
-            {/* Background Aesthetics Blurs */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-fixed-dim/20 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary-fixed/10 rounded-full blur-3xl"></div>
           </div>
@@ -406,3 +404,5 @@ export default function App() {
     </div>
   );
 }
+
+

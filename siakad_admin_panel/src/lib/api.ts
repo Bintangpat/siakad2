@@ -23,8 +23,10 @@ api.interceptors.response.use(
         // If successful, retry the original request
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        window.location.href = "/auth/login";
+        // Refresh failed, redirect to login if not already on the login page
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login";
+        }
         return Promise.reject(refreshError);
       }
     }

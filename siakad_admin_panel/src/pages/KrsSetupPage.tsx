@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Settings } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { FilterParameter } from "@/components/krs-setup/FilterParameter";

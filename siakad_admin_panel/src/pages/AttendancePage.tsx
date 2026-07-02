@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { StatsCards } from "@/components/attendance/StatsCards";
 import { ActiveSessions } from "@/components/attendance/ActiveSessions";
@@ -21,6 +21,7 @@ export default function AttendancePage() {
   };
 
   const handleSaveOverride = (status: string, note: string) => {
+    console.log(`Saving attendance override for NIM ${overrideNim}: status=${status}, note=${note}`);
     alert(
       `Attendance status for NIM ${overrideNim} updated to ${status} successfully and logged in system history.`,
     );

@@ -1,12 +1,12 @@
 import React from "react";
-import { Settings, Calendar, AlertTriangle, Info } from "lucide-react";
+import { Calendar, AlertTriangle, Info } from "lucide-react";
 
 interface ConfigFormProps {
   isActive: boolean;
   setIsActive: (val: boolean) => void;
 }
 
-export const ConfigForm: React.FC<ConfigFormProps> = ({}) => {
+export const ConfigForm: React.FC<ConfigFormProps> = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Date Range */}
