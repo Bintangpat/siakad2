@@ -20,53 +20,24 @@ export const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <div
-      className="bg-surface text-on-surface min-h-screen flex flex-col transition-all duration-300"
-      style={{
-        backgroundColor: "#fbf9f8",
-        backgroundImage: "radial-gradient(#cdc3d4 0.5px, transparent 0.5px)",
-        backgroundSize: "24px 24px",
-        backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px`,
-      }}
-    >
+    <div className="bg-background w-full flex flex-col h-screen items-center transition-all duration-300">
       {/* Top Navigation Shared Component Mapping */}
       <Header />
+      <div className="bg-background flex h-full flex-col justify-center-safe items-center-safe w-full">
+        {/* Main Content Canvas */}
+        <main className="flex items-center w-full h-80vh justify-center ">
+          <div className="w-full justify-center-safe h-full items-center-safe p-12 grid grid-cols-2 ">
+            {/* Branding Content */}
+            <BrandingHeader />
 
-      {/* Main Content Canvas */}
-      <main className="flex items-center w-full h-screen justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Branding Content */}
-          <BrandingHeader />
-
-          {/* Main Auth Form Box */}
-          <LoginForm />
-
-          {/* Footer Navigation Links */}
-          <div className="mt-8 flex flex-wrap justify-center gap-6">
-            <a
-              className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
-              href="#"
-            >
-              Privacy Policy
-            </a>
-            <a
-              className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
-              href="#"
-            >
-              Terms of Service
-            </a>
-            <a
-              className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
-              href="#"
-            >
-              University Main Website
-            </a>
+            {/* Main Auth Form Box */}
+            <LoginForm />
           </div>
-        </div>
-      </main>
+        </main>
 
-      {/* Footer Copyright */}
-      <footer className="w-full py-6 px-6 md:px-10 text-center border-t border-surface-variant/40">
+        {/* Footer Copyright */}
+      </div>
+      <footer className="w-full  py-12 md:px-10 text-center border-t border-surface-variant/40">
         <p className="text-xs font-semibold text-on-surface-variant">
           © {new Date().getFullYear()} SIAKAD Management System. Developed by
           Academic IT Department.

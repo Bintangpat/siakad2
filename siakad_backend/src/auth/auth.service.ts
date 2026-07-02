@@ -11,7 +11,33 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: LoginDto): Promise<{ accessToken: string; user: object }> {
+  async getTokens(userId: number, username: string, role: string) {
+    const payload = { sub: userId, username, role };
+    
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, {
+        expiresIn: '15m',
+      }),
+      this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+      }),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { refreshToken: hashedRefreshToken },
+    });
+  }
+
+  async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { username: dto.username },
     });
@@ -25,12 +51,12 @@ export class AuthService {
       throw new UnauthorizedException('Username atau password salah');
     }
 
-    const payload = { sub: user.id, username: user.username, role: user.role };
-    const accessToken = this.jwtService.sign(payload);
+    const tokens = await this.getTokens(user.id, user.username, user.role);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
 
-    const { password: _pwd, ...userWithoutPassword } = user;
+    const { password: _pwd, refreshToken: _rt, ...userWithoutPassword } = user;
     return {
-      accessToken,
+      ...tokens,
       user: userWithoutPassword,
     };
   }
@@ -57,7 +83,45 @@ export class AuthService {
       omit: { password: true },
     });
 
-    return user;
+    const tokens = await this.getTokens(user.id, user.username, user.role);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+    const { refreshToken: _rt, ...userWithoutPassword } = user as any;
+    return {
+      ...tokens,
+      user: userWithoutPassword,
+    };
+  }
+
+  async logout(userId: number) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { refreshToken: null },
+    });
+  }
+
+  async refreshTokens(userId: number, refreshToken: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !user.refreshToken) {
+      throw new UnauthorizedException('Akses ditolak');
+    }
+
+    const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (!refreshTokenMatches) {
+      throw new UnauthorizedException('Akses ditolak');
+    }
+
+    const tokens = await this.getTokens(user.id, user.username, user.role);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
   }
 
   async getMe(userId: number) {

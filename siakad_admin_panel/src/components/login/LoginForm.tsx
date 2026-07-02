@@ -9,6 +9,7 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
+import { api } from "@/lib/api";
 
 export const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -17,19 +18,32 @@ export const LoginForm: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
 
-    // Merekam simulasi otentikasi jaringan
-    setTimeout(() => {
-      setStatus("success");
-      console.log("Login successful, redirecting to dashboard...");
-    }, 1500);
+    try {
+      const response = await api.post("/auth/login", {
+        username,
+        password,
+      });
+
+      if (response.data) {
+        setStatus("success");
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setStatus("idle");
+      alert("Login failed. Please check your username and password.");
+    }
   };
 
   return (
-    <div className="bg-surface-container-lowest w-fit border border-outline-variant p-8 rounded-lg shadow-md">
+    <div className="bg-background flex flex-col justify-center-safe items-center-safe w-full border border-outline-variant p-8 rounded-lg shadow-md">
       <form className="space-y-6 w-120" onSubmit={handleSubmit}>
         {/* Username Input */}
         <div className="space-y-1">

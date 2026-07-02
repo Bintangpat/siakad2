@@ -1,36 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Save, Loader2, CheckCircle2, ChevronDown } from "lucide-react";
 import uapData from "../../../../UAPinfo.json";
 
 interface UserDataFormProps {
-  formData: {
-    fullName: string;
-    email: string;
-    idNumber: string;
-    faculty: string;
-    studyProgram: string;
-    password?: string;
-  };
-  setFormData: React.Dispatch<
-    React.SetStateAction<{
-      fullName: string;
-      email: string;
-      idNumber: string;
-      faculty: string;
-      studyProgram: string;
-      password?: string;
-    }>
-  >;
-  status: "idle" | "saving" | "success";
-  onSubmit: (e: React.FormEvent) => void;
+  role: string;
+  setRole: (role: string) => void;
 }
 
-export const UserDataForm: React.FC<UserDataFormProps> = ({
-  formData,
-  setFormData,
-  status,
-  onSubmit,
-}) => {
+export const UserDataForm: React.FC<UserDataFormProps> = ({ role, setRole }) => {
+  const [status, setStatus] = useState<"idle" | "saving" | "success">("idle");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    idNumber: "",
+    faculty: "",
+    studyProgram: "",
+    password: "",
+  });
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -44,13 +31,66 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
     });
   };
 
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!role) {
+      alert("Mohon pilih Hak Akses Sistem (System Role) terlebih dahulu.");
+      return;
+    }
+    
+    if (!formData.password) {
+      alert("Mohon masukkan password awal untuk pengguna.");
+      return;
+    }
+
+    setStatus("saving");
+
+    try {
+      // Panggil backend API
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.idNumber,
+          password: formData.password,
+          role: role,
+          namaLengkap: formData.fullName,
+          email: formData.email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save user");
+      }
+
+      setStatus("success");
+      setTimeout(() => {
+        setStatus("idle");
+        // Reset formulir setelah sukses
+        setFormData({
+          fullName: "",
+          email: "",
+          idNumber: "",
+          faculty: "",
+          studyProgram: "",
+          password: "",
+        });
+        setRole("");
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menyimpan pengguna.");
+      setStatus("idle");
+    }
+  };
+
   const selectedFacultyData = uapData.faculties.find(
     (f) => f.name === formData.faculty
   );
   const availablePrograms = selectedFacultyData ? selectedFacultyData.programs : [];
 
   return (
-    <div className="lg:col-span-8 flex flex-col gap-6 text-left">
+    <form onSubmit={handleFormSubmit} className="lg:col-span-8 flex flex-col gap-6 text-left">
       {/* Personal Information Card */}
       <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-xs">
         <div className="px-8 py-4 bg-surface-container border-b border-outline-variant">
@@ -183,6 +223,17 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
           className="px-8 h-11 border border-primary text-primary font-semibold text-sm rounded-lg hover:bg-primary/5 transition-colors cursor-pointer"
           type="button"
           disabled={status !== "idle"}
+          onClick={() => {
+            setFormData({
+              fullName: "",
+              email: "",
+              idNumber: "",
+              faculty: "",
+              studyProgram: "",
+              password: "",
+            });
+            setRole("");
+          }}
         >
           Cancel
         </button>
@@ -217,6 +268,6 @@ export const UserDataForm: React.FC<UserDataFormProps> = ({
           )}
         </button>
       </div>
-    </div>
+    </form>
   );
 };

@@ -11,6 +11,7 @@ import AttendancePage from "@/pages/AttendancePage";
 import KrsSetupPage from "@/pages/KrsSetupPage";
 import UserManagementPage from "@/pages/UserManagementPage";
 import AddUserPage from "@/pages/AddUserPage";
+import LandingPage from "@/pages/LandingPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -19,8 +20,9 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <TooltipProvider>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <ShellPage>
                 <DashboardPage />
@@ -83,7 +85,7 @@ function App() {
               </ShellPage>
             }
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

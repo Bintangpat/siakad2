@@ -3,7 +3,7 @@ import { Search, Bell, HelpCircle, Settings } from "lucide-react";
 
 export const Header: React.FC = () => {
   return (
-    <header className="w-full h-16 sticky top-0 z-40 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline flex justify-between items-center px-lg">
+    <header className="w-full h-16 sticky top-0 bg-background z-40 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline flex justify-between items-center px-lg">
       <div className="flex items-center gap-md flex-1">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant w-5 h-5" />

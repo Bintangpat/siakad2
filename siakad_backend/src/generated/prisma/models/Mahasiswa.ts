@@ -443,10 +443,6 @@ export type EnumStatusAkademikFieldUpdateOperationsInput = {
   set?: $Enums.StatusAkademik
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type MahasiswaCreateNestedManyWithoutDosenWaliInput = {
   create?: Prisma.XOR<Prisma.MahasiswaCreateWithoutDosenWaliInput, Prisma.MahasiswaUncheckedCreateWithoutDosenWaliInput> | Prisma.MahasiswaCreateWithoutDosenWaliInput[] | Prisma.MahasiswaUncheckedCreateWithoutDosenWaliInput[]
   connectOrCreate?: Prisma.MahasiswaCreateOrConnectWithoutDosenWaliInput | Prisma.MahasiswaCreateOrConnectWithoutDosenWaliInput[]

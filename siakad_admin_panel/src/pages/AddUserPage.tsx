@@ -6,72 +6,9 @@ import { Footer } from "@/components/add-user/Footer";
 
 export const AddUserPage: React.FC = () => {
   const [role, setRole] = useState("");
-  const [status, setStatus] = useState<"idle" | "saving" | "success">("idle");
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    idNumber: "",
-    faculty: "",
-    studyProgram: "",
-    password: "",
-  });
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!role) {
-      alert("Mohon pilih Hak Akses Sistem (System Role) terlebih dahulu.");
-      return;
-    }
-    
-    if (!formData.password) {
-      alert("Mohon masukkan password awal untuk pengguna.");
-      return;
-    }
-
-    setStatus("saving");
-
-    try {
-      // Panggil backend API
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const response = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.idNumber,
-          password: formData.password,
-          role: role,
-          namaLengkap: formData.fullName,
-          email: formData.email,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save user");
-      }
-
-      setStatus("success");
-      setTimeout(() => {
-        setStatus("idle");
-        // Reset formulir setelah sukses
-        setFormData({
-          fullName: "",
-          email: "",
-          idNumber: "",
-          faculty: "",
-          studyProgram: "",
-          password: "",
-        });
-        setRole("");
-      }, 2000);
-    } catch (error) {
-      console.error(error);
-      alert("Gagal menyimpan pengguna.");
-      setStatus("idle");
-    }
-  };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-sans">
+    <div className="bg-background text-fore min-h-screen flex flex-col font-sans">
       {/* Top Application Bar Nav */}
       <Header />
 
@@ -88,18 +25,10 @@ export const AddUserPage: React.FC = () => {
         </div>
 
         {/* Core Submission Form Component wrapper */}
-        <form
-          onSubmit={handleFormSubmit}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
-        >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <PhotoAndRolePanel role={role} setRole={setRole} />
-          <UserDataForm
-            formData={formData}
-            setFormData={setFormData}
-            status={status}
-            onSubmit={handleFormSubmit}
-          />
-        </form>
+          <UserDataForm role={role} setRole={setRole} />
+        </div>
       </main>
 
       {/* Global Fluid Sticky Footer */}

@@ -19,24 +19,45 @@ export const UserManagementPage: React.FC = () => {
         const response = await fetch("http://localhost:3000/api/v1/users");
         if (response.ok) {
           const data = await response.json();
-          const mappedUsers = data.map((u: any) => {
+
+          // JALUR AMAN SENIOR DEV:
+          // Periksa apakah 'data' adalah Array langsung, jika bukan (berupa Object),
+          // ambil array-nya dari dalam properti 'data.data' (sesuaikan dengan hasil console.log-mu)
+          const arrayUser = data.data;
+
+          // Berikan perlindungan (guard clause) jika arrayUser ternyata kosong/tidak ditemukan
+          if (!arrayUser) {
+            console.error("Format data dari API tidak dikenali:", data);
+            return;
+          }
+
+          const mappedUsers = arrayUser.map((u: any) => {
             const initials = u.namaLengkap
-              .split(" ")
-              .map((n: string) => n[0])
-              .join("")
-              .substring(0, 2)
-              .toUpperCase();
-              
+              ? u.namaLengkap
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .substring(0, 2)
+                  .toUpperCase()
+              : "??"; // Proteksi jika namaLengkap ternyata kosong atau null
+
             return {
               id: u.id.toString(),
-              name: u.namaLengkap,
+              name: u.namaLengkap || "No Name",
               email: u.email,
               idNumber: u.username,
               role: u.role,
-              department: u.mahasiswa ? "Mahasiswa" : u.dosen ? "Dosen" : "Admin",
+              department: u.mahasiswa
+                ? "MAHASISWA"
+                : u.dosen
+                  ? "DOSEN"
+                  : u.role === "KEUANGAN"
+                    ? "KEUANGAN"
+                    : "ADMIN",
               initials,
             };
           });
+
           setUsers(mappedUsers);
         }
       } catch (error) {
@@ -47,7 +68,6 @@ export const UserManagementPage: React.FC = () => {
     };
     fetchUsers();
   }, []);
-
   // Reaktif Client-Side Filter Logic
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -68,7 +88,7 @@ export const UserManagementPage: React.FC = () => {
       <Header />
 
       {/* Main Core Container */}
-      <main className="max-w-7xl mx-auto px-6 md:px-10 py-8 grow w-full">
+      <main className="max-w-7xl mx-auto px-6 md:px-10 py-8  bg-background grow w-full">
         <DashboardHeader />
 
         <BentoFilterGrid
@@ -81,7 +101,9 @@ export const UserManagementPage: React.FC = () => {
         />
 
         {loading ? (
-          <div className="py-12 text-center text-on-surface-variant font-medium">Loading users...</div>
+          <div className="py-12 text-center text-on-surface-variant font-medium">
+            Loading users...
+          </div>
         ) : (
           <UserTable users={filteredUsers} />
         )}

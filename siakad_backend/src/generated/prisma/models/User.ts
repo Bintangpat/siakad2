@@ -41,6 +41,7 @@ export type UserMinAggregateOutputType = {
   role: $Enums.Role | null
   namaLengkap: string | null
   email: string | null
+  refreshToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.Role | null
   namaLengkap: string | null
   email: string | null
+  refreshToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,6 +65,7 @@ export type UserCountAggregateOutputType = {
   role: number
   namaLengkap: number
   email: number
+  refreshToken: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +87,7 @@ export type UserMinAggregateInputType = {
   role?: true
   namaLengkap?: true
   email?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -95,6 +99,7 @@ export type UserMaxAggregateInputType = {
   role?: true
   namaLengkap?: true
   email?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +111,7 @@ export type UserCountAggregateInputType = {
   role?: true
   namaLengkap?: true
   email?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -204,6 +210,7 @@ export type UserGroupByOutputType = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -238,6 +245,7 @@ export type UserWhereInput = {
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   namaLengkap?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
+  refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   mahasiswa?: Prisma.XOR<Prisma.MahasiswaNullableScalarRelationFilter, Prisma.MahasiswaWhereInput> | null
@@ -252,6 +260,7 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   namaLengkap?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   mahasiswa?: Prisma.MahasiswaOrderByWithRelationInput
@@ -269,6 +278,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   namaLengkap?: Prisma.StringFilter<"User"> | string
+  refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   mahasiswa?: Prisma.XOR<Prisma.MahasiswaNullableScalarRelationFilter, Prisma.MahasiswaWhereInput> | null
@@ -283,6 +293,7 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   namaLengkap?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -302,6 +313,7 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   namaLengkap?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
+  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -312,6 +324,7 @@ export type UserCreateInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaCreateNestedOneWithoutUserInput
@@ -326,6 +339,7 @@ export type UserUncheckedCreateInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedCreateNestedOneWithoutUserInput
@@ -339,6 +353,7 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUpdateOneWithoutUserNestedInput
@@ -353,6 +368,7 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedUpdateOneWithoutUserNestedInput
@@ -367,6 +383,7 @@ export type UserCreateManyInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -377,6 +394,7 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +406,7 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +418,7 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   namaLengkap?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -414,6 +434,7 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   namaLengkap?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -425,6 +446,7 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   namaLengkap?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -444,6 +466,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -506,6 +532,7 @@ export type UserCreateWithoutMahasiswaInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   dosen?: Prisma.DosenCreateNestedOneWithoutUserInput
@@ -519,6 +546,7 @@ export type UserUncheckedCreateWithoutMahasiswaInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   dosen?: Prisma.DosenUncheckedCreateNestedOneWithoutUserInput
@@ -547,6 +575,7 @@ export type UserUpdateWithoutMahasiswaInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dosen?: Prisma.DosenUpdateOneWithoutUserNestedInput
@@ -560,6 +589,7 @@ export type UserUncheckedUpdateWithoutMahasiswaInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dosen?: Prisma.DosenUncheckedUpdateOneWithoutUserNestedInput
@@ -572,6 +602,7 @@ export type UserCreateWithoutDosenInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaCreateNestedOneWithoutUserInput
@@ -585,6 +616,7 @@ export type UserUncheckedCreateWithoutDosenInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedCreateNestedOneWithoutUserInput
@@ -613,6 +645,7 @@ export type UserUpdateWithoutDosenInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUpdateOneWithoutUserNestedInput
@@ -626,6 +659,7 @@ export type UserUncheckedUpdateWithoutDosenInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedUpdateOneWithoutUserNestedInput
@@ -638,6 +672,7 @@ export type UserCreateWithoutPengumumanInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaCreateNestedOneWithoutUserInput
@@ -651,6 +686,7 @@ export type UserUncheckedCreateWithoutPengumumanInput = {
   role: $Enums.Role
   namaLengkap: string
   email: string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedCreateNestedOneWithoutUserInput
@@ -679,6 +715,7 @@ export type UserUpdateWithoutPengumumanInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUpdateOneWithoutUserNestedInput
@@ -692,6 +729,7 @@ export type UserUncheckedUpdateWithoutPengumumanInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   namaLengkap?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mahasiswa?: Prisma.MahasiswaUncheckedUpdateOneWithoutUserNestedInput
@@ -736,6 +774,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   namaLengkap?: boolean
   email?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   mahasiswa?: boolean | Prisma.User$mahasiswaArgs<ExtArgs>
@@ -751,6 +790,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   namaLengkap?: boolean
   email?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -762,6 +802,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   namaLengkap?: boolean
   email?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -773,11 +814,12 @@ export type UserSelectScalar = {
   role?: boolean
   namaLengkap?: boolean
   email?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "role" | "namaLengkap" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "role" | "namaLengkap" | "email" | "refreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mahasiswa?: boolean | Prisma.User$mahasiswaArgs<ExtArgs>
   dosen?: boolean | Prisma.User$dosenArgs<ExtArgs>
@@ -801,6 +843,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.Role
     namaLengkap: string
     email: string
+    refreshToken: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1235,6 +1278,7 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly namaLengkap: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly refreshToken: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

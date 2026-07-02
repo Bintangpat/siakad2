@@ -6,7 +6,11 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Res,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
+import type { Response, Request } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
@@ -24,11 +28,26 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login dan dapatkan JWT token' })
-  async login(@Body() dto: LoginDto) {
+  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.login(dto);
+    
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000, // 15m
+    });
+
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+
     return {
       message: 'Login berhasil',
-      data: result,
+      data: result.user,
     };
   }
 
@@ -37,12 +56,59 @@ export class AuthController {
   @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Buat akun user baru (Admin only)' })
-  async register(@Body() dto: RegisterDto) {
-    const user = await this.authService.register(dto);
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.register(dto);
+    
+    // We only set cookies if the user registers themselves (but this is admin only, so maybe we shouldn't overwrite the admin's session? Usually yes, admin creating a user shouldn't log them in as that user). 
+    // Since this is an admin route, we shouldn't overwrite the admin's cookies. Let's return the user.
     return {
       message: 'User berhasil dibuat',
-      data: user,
+      data: result.user,
     };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh JWT access token' })
+  async refreshTokens(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const refreshToken = req.cookies['refreshToken'];
+    if (!refreshToken) {
+      throw new UnauthorizedException('Akses ditolak'); 
+    }
+
+    const decoded = this.authService['jwtService'].decode(refreshToken) as any;
+    if (!decoded || !decoded.sub) {
+      throw new UnauthorizedException('Akses ditolak');
+    }
+
+    const tokens = await this.authService.refreshTokens(decoded.sub, refreshToken);
+
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return { message: 'Token berhasil di-refresh' };
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Logout dan hapus token' })
+  async logout(@GetUser('id') userId: number, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logout(userId);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return { message: 'Logout berhasil' };
   }
 
   @Get('me')

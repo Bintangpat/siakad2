@@ -11,7 +11,7 @@ export const AnalyticsPreview: React.FC = () => {
   return (
     <div className="mt-xl grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Daily Registration Trend Component */}
-      <div className="bg-white/80 backdrop-blur-[8px] border border-[rgba(124,116,131,0.1)] p-lg rounded-xl shadow-sm">
+      <div className="bg-background backdrop-blur-[8px] border border-[rgba(124,116,131,0.1)] p-lg rounded-xl shadow-sm">
         <h3 className="font-label-lg text-primary mb-md flex items-center gap-xs">
           <LineChart className="w-5 h-5" />
           Daily Registration Trend
