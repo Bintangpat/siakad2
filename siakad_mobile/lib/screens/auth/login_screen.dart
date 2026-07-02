@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'auth_config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,10 +28,44 @@ class _LoginPageState extends State<LoginPage> {
   void _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-    Navigator.pushReplacementNamed(context, '/shell');
+
+    try {
+      final response = await http.post(
+        Uri.parse('${AuthConfig.baseUrl}/auth/login/mobile'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _nimController.text.trim(),
+          'password': _passwordController.text,
+        }),
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        Navigator.pushReplacementNamed(context, '/shell');
+      } else {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final String errorMessage = responseData['message'] ?? 'Login gagal';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Terjadi kesalahan koneksi: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override

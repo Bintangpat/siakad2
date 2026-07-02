@@ -23,7 +23,7 @@ export const LoginForm: React.FC = () => {
     setStatus("loading");
 
     try {
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/auth/login/admin", {
         username,
         password,
       });

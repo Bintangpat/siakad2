@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'auth_config.dart';
 
 class PinVerificationPage extends StatefulWidget {
   const PinVerificationPage({super.key});
@@ -39,10 +42,46 @@ class _PinVerificationPageState extends State<PinVerificationPage> {
       return;
     }
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-    Navigator.pushNamed(context, '/set-new-password');
+
+    try {
+      final email = ModalRoute.of(context)!.settings.arguments as String;
+      final response = await http.post(
+        Uri.parse('${AuthConfig.baseUrl}/auth/verify-otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'code': _currentPinCode,
+        }),
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final String resetToken = responseData['resetToken'];
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        Navigator.pushNamed(context, '/set-new-password', arguments: resetToken);
+      } else {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final String errorMessage = responseData['message'] ?? 'Verifikasi OTP gagal';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Terjadi kesalahan koneksi: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override

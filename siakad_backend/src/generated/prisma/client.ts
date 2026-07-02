@@ -99,3 +99,8 @@ export type AbsensiMahasiswa = Prisma.AbsensiMahasiswaModel
  * 
  */
 export type Pengumuman = Prisma.PengumumanModel
+/**
+ * Model OtpCode
+ * 
+ */
+export type OtpCode = Prisma.OtpCodeModel

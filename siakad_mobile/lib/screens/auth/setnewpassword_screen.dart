@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'auth_config.dart';
 
 /// SetNewPasswordPage — displayed after OTP verification, lets user set a new password.
 class SetNewPasswordPage extends StatefulWidget {
@@ -48,11 +51,45 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage>
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-    // On success — go back to login
-    _showSuccess();
+
+    try {
+      final String resetToken = ModalRoute.of(context)!.settings.arguments as String;
+      final response = await http.post(
+        Uri.parse('${AuthConfig.baseUrl}/auth/reset-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'resetToken': resetToken,
+          'passwordBaru': _passwordCtrl.text,
+        }),
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        _showSuccess();
+      } else {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final String errorMessage = responseData['message'] ?? 'Gagal merubah password';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Terjadi kesalahan koneksi: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _showSuccess() {

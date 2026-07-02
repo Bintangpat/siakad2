@@ -62,7 +62,8 @@ export const ModelName = {
   TagihanPembayaran: 'TagihanPembayaran',
   SesiPertemuan: 'SesiPertemuan',
   AbsensiMahasiswa: 'AbsensiMahasiswa',
-  Pengumuman: 'Pengumuman'
+  Pengumuman: 'Pengumuman',
+  OtpCode: 'OtpCode'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -232,6 +233,19 @@ export const PengumumanScalarFieldEnum = {
 } as const
 
 export type PengumumanScalarFieldEnum = (typeof PengumumanScalarFieldEnum)[keyof typeof PengumumanScalarFieldEnum]
+
+
+export const OtpCodeScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  code: 'code',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  used: 'used'
+} as const
+
+export type OtpCodeScalarFieldEnum = (typeof OtpCodeScalarFieldEnum)[keyof typeof OtpCodeScalarFieldEnum]
 
 
 export const SortOrder = {

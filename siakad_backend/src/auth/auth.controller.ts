@@ -25,24 +25,50 @@ import { Role } from '../generated/prisma/client';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @Post('login/admin')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Login dan dapatkan JWT token' })
-  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    const result = await this.authService.login(dto);
+  @ApiOperation({ summary: 'Login khusus Admin dan Staff Keuangan' })
+  async loginAdmin(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.loginWithRoles(dto, [Role.ADMIN, Role.KEUANGAN]);
     
     res.cookie('accessToken', result.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000, // 15m
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return {
+      message: 'Login berhasil',
+      data: result.user,
+    };
+  }
+
+  @Post('login/mobile')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login khusus Mahasiswa dan Dosen' })
+  async loginMobile(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.loginWithRoles(dto, [Role.MAHASISWA, Role.DOSEN]);
+    
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return {
@@ -121,5 +147,26 @@ export class AuthController {
       message: 'Profil berhasil diambil',
       data: user,
     };
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Kirim kode OTP untuk lupa password' })
+  async forgotPassword(@Body() body: { email: string }) {
+    return this.authService.sendOtp(body.email);
+  }
+
+  @Post('verify-otp')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Verifikasi kode OTP' })
+  async verifyOtp(@Body() body: { email: string; code: string }) {
+    return this.authService.verifyOtp(body.email, body.code);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset password menggunakan reset token' })
+  async resetPassword(@Body() body: { resetToken: string; passwordBaru: string }) {
+    return this.authService.resetPassword(body.resetToken, body.passwordBaru);
   }
 }
