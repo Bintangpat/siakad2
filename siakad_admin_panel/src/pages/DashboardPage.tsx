@@ -24,7 +24,7 @@ export default function App() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await api.get('/dashboard/stats');
+        const response = await api.get("/dashboard/stats");
         setStats(response.data);
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
@@ -41,14 +41,14 @@ export default function App() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await api.get('/pembayaran');
+        const response = await api.get("/pembayaran");
         // Map backend tagihan to Transaction format
         const mappedTx = response.data.slice(0, 5).map((t: any) => ({
           id: t.nim,
           name: t.mahasiswa?.user?.namaLengkap || "Unknown",
           amount: `$${t.nominal.toLocaleString()}`,
-          status: t.statusBayar === 'LUNAS' ? 'VALIDATED' : 'PENDING',
-          date: new Date(t.createdAt).toLocaleDateString()
+          status: t.statusBayar === "LUNAS" ? "VALIDATED" : "PENDING",
+          date: new Date(t.createdAt).toLocaleDateString(),
         }));
         setTransactions(mappedTx);
       } catch (error) {
@@ -148,7 +148,9 @@ export default function App() {
                   Total Active Students
                 </p>
                 <h3 className="text-4xl font-extrabold text-primary mt-xs">
-                  {loadingStats ? "..." : stats?.totalActiveStudents.toLocaleString()}
+                  {loadingStats
+                    ? "..."
+                    : stats?.totalActiveStudents.toLocaleString()}
                 </h3>
               </div>
             </div>
@@ -186,7 +188,9 @@ export default function App() {
                 </p>
                 <div className="flex items-baseline gap-xs">
                   <h3 className="text-2xl md:text-3xl font-bold text-primary mt-xs">
-                    {loadingStats ? "..." : `$${(stats?.totalRevenue || 0).toLocaleString()}`}
+                    {loadingStats
+                      ? "..."
+                      : `$${(stats?.totalRevenue || 0).toLocaleString()}`}
                   </h3>
                   <span className="text-xs font-semibold text-on-surface-variant">
                     USD
@@ -210,7 +214,9 @@ export default function App() {
                   Pending Approvals
                 </p>
                 <h3 className="text-2xl md:text-3xl font-bold text-error mt-xs">
-                  {loadingStats ? "..." : stats?.pendingApprovals.toLocaleString()}
+                  {loadingStats
+                    ? "..."
+                    : stats?.pendingApprovals.toLocaleString()}
                 </h3>
               </div>
             </div>
